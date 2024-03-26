@@ -5,7 +5,14 @@ module.exports = {
     "./src/**/*.jsx",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        eggplant: "#443742",
+        coyote: "#846C5B",
+        buff: "#CEA07E",
+        peachyellow: "#EDD9A3"
+      }
+    },
   },
   plugins: [],
 }
