@@ -7,10 +7,12 @@ const Header = () => {
   return (
     <AppBar position="static">
       <Toolbar className="bg-eggplant text-buff">
-        <p className="font-bold text-lg">Seasons</p>
+        <Typography variant="h6" component="p">
+          Seasons
+        </Typography>
         <HeaderSelector />
 
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: "center" }}>
+        <Typography variant="h5" component="div" sx={{ flexGrow: 1, textAlign: "center" }}>
           App Title
         </Typography>
 
