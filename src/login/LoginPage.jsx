@@ -4,9 +4,7 @@ import { LoginForm } from "../components/LoginForm"
 const LoginPage = () => {
   return (
     // !! implement F1 BG picture later
-    // <div className="bg-cover bg-center" style={{ backgroundImage: `url(${F1})` }}>
-    // </div>
-    <LoginForm />
+      <LoginForm />
   )
 }
 
