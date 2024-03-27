@@ -17,7 +17,7 @@ export const FavoritesModalButton = () => {
 
   return (
     <>
-      <Button color="inherit" onClick={handleFavoritesOpen}>
+      <Button color="inherit" onClick={handleFavoritesOpen} sx={{ mx: 1 }}>
         Favorites
       </Button>
       <Modal open={favoritesOpen} onClose={handleFavoritesClose}>

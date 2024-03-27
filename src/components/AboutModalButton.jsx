@@ -16,7 +16,7 @@ export const AboutModalButton = () => {
 
   return (
     <>
-      <Button color="inherit" onClick={handleAboutOpen}>
+      <Button color="inherit" onClick={handleAboutOpen} sx={{mx: 1}}>
         About
       </Button>
       <Modal open={aboutOpen} onClose={handleAboutClose}>

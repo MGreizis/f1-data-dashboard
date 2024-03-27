@@ -4,8 +4,8 @@ import Login from "../login/LoginPage";
 export const Home = () => {
   return (
     <>
-      <h2 className="text-xl font-bold text-eggplant text-center mb-4">
-        App to be named later
+      <h2 className="text-xl font-bold text-eggplant text-center my-4">
+        F1 Dashboard
       </h2>
       <div className="flex max-h-full flex-col items-center justify-center">
         <Login />
