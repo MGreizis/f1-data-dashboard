@@ -12,8 +12,8 @@ const Header = () => {
         </Typography>
         <HeaderSelector />
 
-        <Typography variant="h5" component="div" sx={{ flexGrow: 1, textAlign: "center" }}>
-          App Title
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: "center" }}>
+          F1 Dashboard
         </Typography>
 
         <AboutModalButton />
