@@ -1,11 +1,13 @@
 import { Select, MenuItem } from "@mui/material";
 import { useState } from "react";
 
-export const HeaderSelector = () => {
+export const HeaderSelector = ({ onYearChange }) => {
   const [selectedYear, setSelectedYear] = useState(2023);
 
   const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+    const year = event.target.value;
+    setSelectedYear(year);
+    onYearChange(year);
   };
 
   return (
