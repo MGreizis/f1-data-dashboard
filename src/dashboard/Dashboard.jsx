@@ -1,7 +1,6 @@
 import Header from "../common/Header";
 import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-// import { Loading } from "@/components/Loading";
 import { DashboardSections } from "@/components/DashboardSections";
 
 export const Dashboard = () => {
@@ -15,8 +14,8 @@ export const Dashboard = () => {
     if (supabaseUrl && supabaseAnonKey) {
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-      const fetchData = async () => {
-        const {data, error} = await supabase
+      const fetchRaceData = async () => {
+        const { data, error } = await supabase
           .from("races")
           .select()
           .eq("year", selectedYear)
@@ -26,12 +25,10 @@ export const Dashboard = () => {
           console.error("Error fetching data:", error.message);
         } else {
           setData(data);
-          console.log("Data fetched:", data);
-          console.log(data[0].date);
         }
       };
 
-      fetchData();
+      fetchRaceData();
     }
   }, [selectedYear]);
 
@@ -46,4 +43,4 @@ export const Dashboard = () => {
       <DashboardSections data={data} />
     </>
   );
-}
+};
