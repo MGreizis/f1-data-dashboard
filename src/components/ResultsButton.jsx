@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
-const ResultsButton = ({ race, onShowDetails, fetchRaceResults }) => {
+const ResultsButton = ({ race, onShowDetails, fetchRaceResults, fetchQualiTimes }) => {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     setLoading(true);
     await onShowDetails(race);
+    await fetchQualiTimes(race.raceId);
     await fetchRaceResults(race.raceId);
     setLoading(false);
   };

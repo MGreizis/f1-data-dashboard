@@ -17,7 +17,7 @@ export const Dashboard = () => {
       const fetchRaceData = async () => {
         const { data, error } = await supabase
           .from("races")
-          .select()
+          .select(`raceId, year, circuits (name, url), date, round, url, name`)
           .eq("year", selectedYear)
           .order("date", { ascending: true });
 

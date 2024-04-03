@@ -6,6 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 export const DashboardSections = ({ data }) => {
   const [selectedRace, setSelectedRace] = useState(null);
   const [raceResults, setRaceResults] = useState(null);
+  const [qualifyingTimes, setQualifyingTimes] = useState(null);
 
   const handleShowQuali = (race) => {
     setSelectedRace(race);
@@ -22,7 +23,7 @@ export const DashboardSections = ({ data }) => {
         const { data, error } = await supabase
           .from("results")
           .select(
-            `drivers (driverRef, code, forename, surname), races (name, round, year, date), constructors (name, constructorRef, nationality), positionText, points, laps`
+            `drivers (driverRef, code, forename, surname), races (name, round, year, date), constructors (name, constructorRef), positionText, points, laps`
           )
           .eq("raceId", raceId);
 
@@ -36,6 +37,33 @@ export const DashboardSections = ({ data }) => {
       console.error("Error fetching race results:", err.message);
     }
   };
+
+  const fetchQualiTimes = async (raceId) => {
+    try {
+      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+      if (supabaseUrl && supabaseAnonKey) {
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+        const { data, error } = await supabase
+          .from("qualifying")
+          .select(
+            `races (raceId, year, name, date, time), drivers (driverRef, forename, surname, number, code, nationality), q1, q2, q3, constructors (name), position`
+          )
+          .eq("raceId", raceId)
+          .order("q3", { ascending: true });
+
+        if (error) {
+          console.error("Error fetching qualifying times:", error.message);
+        } else {
+          setQualifyingTimes(data);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching qualifying times:", err.message);
+    }
+  }
 
   return (
     <div className="flex flex-row">
@@ -64,6 +92,7 @@ export const DashboardSections = ({ data }) => {
                     race={race}
                     onShowDetails={handleShowQuali}
                     fetchRaceResults={fetchRaceResults}
+                    fetchQualiTimes={fetchQualiTimes}
                   />
 
                   <StandingsButton />
@@ -80,15 +109,46 @@ export const DashboardSections = ({ data }) => {
               <div className="p-2">
                 <h2>
                   {selectedRace.name}, Round {selectedRace.round},{" "}
-                  {selectedRace.year}
+                  {selectedRace.year}, <a href={selectedRace.circuits.url}>{selectedRace.circuits.name}</a>, {" "}
+                  {selectedRace.date}, <a href={selectedRace.url}>Race Information</a>
                 </h2>
               </div>
             )}
             <h2 className="text-center font-bold text-eggplant text-xl py-2">
               Qualifying
             </h2>
+            <div className="w-1/2 m-2" id="qualifying">
+              {qualifyingTimes && (
+                <table className="text-center mx-2">
+                  <thead>
+                    <tr>
+                      <th className="px-2">Pos</th>
+                      <th className="px-2">Driver</th>
+                      <th>Constructor</th>
+                      <th>Q1</th>
+                      <th>Q2</th>
+                      <th>Q3</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {qualifyingTimes.map((qualifying, index) => (
+                      <tr key={index}>
+                        <td>{qualifying.position}</td>
+                        <td key={index} className={index < 3 ? "font-bold py-3" : "py-3"}>
+                          {qualifying.drivers.forename} {qualifying.drivers.surname}
+                        </td>
+                        <td>{qualifying.constructors.name}</td>
+                        <td>{qualifying.q1}</td>
+                        <td>{qualifying.q2}</td>
+                        <td className="mx-2">{qualifying.q3}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
-          <div className="w-1/2 m-2" id="results">
+          <div className="w-1/2 m-2">
             <h2 className="text-center font-bold text-eggplant text-xl py-2">
               Results
             </h2>
@@ -105,7 +165,7 @@ export const DashboardSections = ({ data }) => {
                 </thead>
                 <tbody>
                   {raceResults.map((result, index) => (
-                    <tr key={index} className={index < 3 ? "bg-peachyellow my-2" : ""}>
+                    <tr key={index} className={index < 3 ? "bg-peachyellow my-2 border-l-2 border-coyote" : "border-l-2 border-coyote"}>
                       <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
                         {result.positionText}
                       </td>
