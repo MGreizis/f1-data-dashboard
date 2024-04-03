@@ -33,8 +33,8 @@ export const DashboardSections = ({ data }) => {
           setRaceResults(data);
         }
       }
-    } catch (err) {
-      console.error("Error fetching race results:", err.message);
+    } catch (error) {
+      console.error("Error fetching race results:", error.message);
     }
   };
 

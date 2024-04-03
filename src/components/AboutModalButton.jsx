@@ -36,8 +36,15 @@ export const AboutModalButton = () => {
           <Typography variant="h6" component="h2" gutterBottom>
             About
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            Brief description of the project and the technology it is using.
+          <Typography variant="body1" gutterBottom sx={{ mt: 2 }}>
+            A project to display Formula 1 data. Users can select a specific race to see the qualifying times
+            and results for that race. Users can also add drivers, constructors and circuits to their favorites.
+          </Typography>
+          <Typography variant="body1" gutterBottom sx={{ mt: 2 }}>
+            Built with React, Material UI, Tailwind CSS, and Supabase
+          </Typography>
+          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+            By: Mārtiņš Greizis
           </Typography>
           <Button
             variant="outlined"
