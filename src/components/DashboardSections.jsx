@@ -103,21 +103,21 @@ export const DashboardSections = ({ data }) => {
       </div>
       <div className="w-1/16">{/* Blank space */}</div>
       <div className="w-3/5 m-4">
-        <div className="flex min-h-screen bg-buff">
+        <div className="flex min-h-screen bg-buff text-eggplant">
           <div className="w-1/2 m-2">
             {selectedRace && (
               <div className="p-2">
                 <h2>
                   {selectedRace.name}, Round {selectedRace.round},{" "}
-                  {selectedRace.year}, <a href={selectedRace.circuits.url}>{selectedRace.circuits.name}</a>, {" "}
-                  {selectedRace.date}, <a href={selectedRace.url}>Race Information</a>
+                  {selectedRace.year}, <a href={selectedRace.circuits.url} target="_blank" rel="noopener noreferrer">{selectedRace.circuits.name}</a>, {" "}
+                  {selectedRace.date}, <a href={selectedRace.url} target="_blank" rel="noopener noreferrer">Race Information</a>
                 </h2>
               </div>
             )}
             <h2 className="text-center font-bold text-eggplant text-xl py-2">
               Qualifying
             </h2>
-            <div className="w-1/2 m-2" id="qualifying">
+            <div className="w-1/2 m-2">
               {qualifyingTimes && (
                 <table className="text-center mx-2">
                   <thead>
@@ -139,8 +139,8 @@ export const DashboardSections = ({ data }) => {
                         </td>
                         <td>{qualifying.constructors.name}</td>
                         <td>{qualifying.q1}</td>
-                        <td>{qualifying.q2}</td>
-                        <td className="mx-2">{qualifying.q3}</td>
+                        <td className="px-2">{qualifying.q2}</td>
+                        <td className="px-2 pr-3">{qualifying.q3}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -165,11 +165,11 @@ export const DashboardSections = ({ data }) => {
                 </thead>
                 <tbody>
                   {raceResults.map((result, index) => (
-                    <tr key={index} className={index < 3 ? "bg-peachyellow my-2 border-l-2 border-coyote" : "border-l-2 border-coyote"}>
+                    <tr key={index} className={index < 3 ? "bg-peachyellow my-2 divide-y divide-coyote" : "divide-y divide-coyote"}>
                       <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
                         {result.positionText}
                       </td>
-                      <td key={index} className={index < 3 ? "font-bold border-l-2 border-coyote py-3" : "border-l-2 border-coyote py-3"}>
+                      <td key={index} className={index < 3 ? "font-bold py-3" : "py-3"}>
                         {result.drivers.forename} {result.drivers.surname}
                       </td>
                       <td>{result.constructors.name}</td>
