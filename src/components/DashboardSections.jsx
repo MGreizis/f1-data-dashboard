@@ -135,9 +135,9 @@ export const DashboardSections = ({ data }) => {
                       <tr key={index}>
                         <td>{qualifying.position}</td>
                         <td 
-                            key={index} 
-                            className={index < 3 ? "font-bold py-3" : "py-3"}
-                          >
+                          key={index} 
+                          className={index < 3 ? "font-bold py-3" : "py-3"}
+                        >
                           {qualifying.drivers.forename} {qualifying.drivers.surname}
                         </td>
                         <td>{qualifying.constructors.name}</td>
@@ -168,11 +168,17 @@ export const DashboardSections = ({ data }) => {
                 </thead>
                 <tbody>
                   {raceResults.map((result, index) => (
-                    <tr key={index} className={index < 3 ? "bg-coyote my-2 divide-y divide-coyote" : "divide-y divide-coyote"}>
+                    <tr 
+                      key={index} 
+                      className={index < 3 ? "bg-wenge text-white my-2 divide-y divide-coyote" : "divide-y divide-coyote"}
+                    >
                       <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
                         {result.positionText}
                       </td>
-                      <td key={index} className={index < 3 ? "font-bold py-3" : "py-3"}>
+                      <td 
+                        key={index} 
+                        className={index < 3 ? "font-bold py-3" : "py-3"}
+                      >
                         {result.drivers.forename} {result.drivers.surname}
                       </td>
                       <td>{result.constructors.name}</td>
