@@ -41,6 +41,7 @@ export const DashboardSections = ({ data }) => {
     <div className="flex flex-row">
       <div className="w-2/5 m-4">
         <div className="min-h-screen bg-buff text-eggplant">
+        {/* !! Refactor into table */}
           <h2 className="font-bold text-eggplant p-2 mx-2">
             Rnd &#160; &#160; &#160; Circuit
           </h2>
@@ -105,7 +106,7 @@ export const DashboardSections = ({ data }) => {
                 <tbody>
                   {raceResults.map((result, index) => (
                     <tr key={index} className={index < 3 ? "bg-peachyellow my-2" : ""}>
-                      <td key={index} className={index < 3 ? "font-bold" : ""}>   
+                      <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
                         {result.positionText}
                       </td>
                       <td key={index} className={index < 3 ? "font-bold border-l-2 border-coyote py-3" : "border-l-2 border-coyote py-3"}>
