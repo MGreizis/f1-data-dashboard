@@ -68,7 +68,7 @@ export const DashboardSections = ({ data }) => {
   return (
     <div className="flex flex-row">
       <div className="w-2/5 m-4">
-        <div className="min-h-screen bg-buff text-eggplant">
+        <div className="min-h-screen bg-taupe rounded-md">
         {/* !! Refactor into table */}
           <h2 className="font-bold text-eggplant p-2 mx-2">
             Rnd &#160; &#160; &#160; Circuit
@@ -79,14 +79,14 @@ export const DashboardSections = ({ data }) => {
                 key={`${race.id}-${index}`}
                 className="flex items-center justify-between"
               >
-                <div className="flex items-center space-x-4">
+                {/* <div className="flex items-center space-x-4"> */}
                   <div className="flex items-center justify-center mx-4 font-bold">
                     {race.round}
                   </div>
                   <div>
                     <h2>{race.name}</h2>
                   </div>
-                </div>
+                {/* </div> */}
                 <div className="flex mr-2">
                   <ResultsButton
                     race={race}
@@ -103,7 +103,7 @@ export const DashboardSections = ({ data }) => {
       </div>
       <div className="w-1/16">{/* Blank space */}</div>
       <div className="w-3/5 m-4">
-        <div className="flex min-h-screen bg-buff text-eggplant">
+        <div className="flex min-h-screen bg-taupe rounded-md">
           <div className="w-1/2 m-2">
             {selectedRace && (
               <div className="p-2">
@@ -114,7 +114,7 @@ export const DashboardSections = ({ data }) => {
                 </h2>
               </div>
             )}
-            <h2 className="text-center font-bold text-eggplant text-xl py-2">
+            <h2 className="text-center font-bold text-xl py-2">
               Qualifying
             </h2>
             <div className="w-1/2 m-2">
@@ -134,7 +134,10 @@ export const DashboardSections = ({ data }) => {
                     {qualifyingTimes.map((qualifying, index) => (
                       <tr key={index}>
                         <td>{qualifying.position}</td>
-                        <td key={index} className={index < 3 ? "font-bold py-3" : "py-3"}>
+                        <td 
+                            key={index} 
+                            className={index < 3 ? "font-bold py-3" : "py-3"}
+                          >
                           {qualifying.drivers.forename} {qualifying.drivers.surname}
                         </td>
                         <td>{qualifying.constructors.name}</td>
@@ -149,7 +152,7 @@ export const DashboardSections = ({ data }) => {
             </div>
           </div>
           <div className="w-1/2 m-2">
-            <h2 className="text-center font-bold text-eggplant text-xl py-2">
+            <h2 className="text-center font-bold text-xl py-2">
               Results
             </h2>
             {raceResults && (
@@ -165,7 +168,7 @@ export const DashboardSections = ({ data }) => {
                 </thead>
                 <tbody>
                   {raceResults.map((result, index) => (
-                    <tr key={index} className={index < 3 ? "bg-peachyellow my-2 divide-y divide-coyote" : "divide-y divide-coyote"}>
+                    <tr key={index} className={index < 3 ? "bg-coyote my-2 divide-y divide-coyote" : "divide-y divide-coyote"}>
                       <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
                         {result.positionText}
                       </td>

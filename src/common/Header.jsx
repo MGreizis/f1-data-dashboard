@@ -6,7 +6,7 @@ import { FavoritesModalButton } from "@/components/FavoritesModalButton";
 const Header = ({ onYearChange }) => {
   return (
     <AppBar position="static">
-      <Toolbar className="bg-eggplant text-buff">
+      <Toolbar className="bg-auburn text-slate-200">
         <Typography variant="h6" component="p">
           Seasons
         </Typography>

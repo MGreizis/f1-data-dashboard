@@ -14,7 +14,7 @@ const ResultsButton = ({ race, onShowDetails, fetchRaceResults, fetchQualiTimes 
   return (
     <button 
       onClick={handleClick}
-      className={`my-2 px-2 mx-4 bg-peachyellow hover:bg-coyote text-eggplant font-bold rounded ${loading ? 'opacity-50 cursor-not-allowed' : ""}`}
+      className={`my-2 px-2 mx-4 bg-amaranth hover:bg-coyote text-eggplant font-bold rounded ${loading ? 'opacity-50 cursor-not-allowed' : ""}`}
       disabled={loading}
     >
       {loading ? 'Loading...' : 'Results'}
