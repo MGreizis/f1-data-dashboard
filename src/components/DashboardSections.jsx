@@ -114,80 +114,84 @@ export const DashboardSections = ({ data }) => {
                 </h2>
               </div>
             )}
-            <h2 className="text-center font-bold text-xl py-2">
-              Qualifying
-            </h2>
             <div className="w-1/2 m-2">
               {qualifyingTimes && (
-                <table className="text-center mx-2">
-                  <thead>
-                    <tr>
-                      <th className="px-2">Pos</th>
-                      <th className="px-2">Driver</th>
-                      <th>Constructor</th>
-                      <th>Q1</th>
-                      <th>Q2</th>
-                      <th>Q3</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {qualifyingTimes.map((qualifying, index) => (
-                      <tr key={index}>
-                        <td>{qualifying.position}</td>
-                        <td 
-                          key={index} 
-                          className={index < 3 ? "font-bold py-3" : "py-3"}
-                        >
-                          {qualifying.drivers.forename} {qualifying.drivers.surname}
-                        </td>
-                        <td>{qualifying.constructors.name}</td>
-                        <td>{qualifying.q1}</td>
-                        <td className="px-2">{qualifying.q2}</td>
-                        <td className="px-2 pr-3">{qualifying.q3}</td>
+                <>
+                  <h2 className="text-center font-bold text-xl py-2">
+                    Qualifying
+                  </h2>
+                  <table className="text-center mx-2">
+                    <thead>
+                      <tr>
+                        <th className="px-2">Pos</th>
+                        <th className="px-2">Driver</th>
+                        <th>Constructor</th>
+                        <th>Q1</th>
+                        <th>Q2</th>
+                        <th>Q3</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {qualifyingTimes.map((qualifying, index) => (
+                        <tr key={index}>
+                          <td>{qualifying.position}</td>
+                          <td 
+                            key={index} 
+                            className={index < 3 ? "font-bold py-3" : "py-3"}
+                          >
+                            {qualifying.drivers.forename} {qualifying.drivers.surname}
+                          </td>
+                          <td>{qualifying.constructors.name}</td>
+                          <td>{qualifying.q1}</td>
+                          <td className="px-2">{qualifying.q2}</td>
+                          <td className="px-2 pr-3">{qualifying.q3}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </>
               )}
             </div>
           </div>
           <div className="w-1/2 m-2">
-            <h2 className="text-center font-bold text-xl py-2">
-              Results
-            </h2>
             {raceResults && (
-              <table className="text-center mx-2">
-                <thead>
-                  <tr>
-                    <th className="px-2">Pos</th>
-                    <th>Driver</th>
-                    <th className="px-2">Constructor</th>
-                    <th className="px-2">Laps</th>
-                    <th className="px-2">Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {raceResults.map((result, index) => (
-                    <tr 
-                      key={index} 
-                      className={index < 3 ? "bg-wenge text-white my-2 divide-y divide-coyote" : "divide-y divide-coyote"}
-                    >
-                      <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
-                        {result.positionText}
-                      </td>
-                      <td 
-                        key={index} 
-                        className={index < 3 ? "font-bold py-3" : "py-3"}
-                      >
-                        {result.drivers.forename} {result.drivers.surname}
-                      </td>
-                      <td>{result.constructors.name}</td>
-                      <td>{result.laps}</td>
-                      <td>{result.points}</td>
+              <>
+                <h2 className="text-center font-bold text-xl py-2">
+                  Results
+                </h2>
+                <table className="text-center mx-2">
+                  <thead>
+                    <tr>
+                      <th className="px-2">Pos</th>
+                      <th>Driver</th>
+                      <th className="px-2">Constructor</th>
+                      <th className="px-2">Laps</th>
+                      <th className="px-2">Points</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {raceResults.map((result, index) => (
+                      <tr 
+                        key={index} 
+                        className={index < 3 ? "bg-wenge text-white my-2 divide-y divide-coyote" : "divide-y divide-coyote"}
+                      >
+                        <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
+                          {result.positionText}
+                        </td>
+                        <td 
+                          key={index} 
+                          className={index < 3 ? "font-bold py-3" : "py-3"}
+                        >
+                          {result.drivers.forename} {result.drivers.surname}
+                        </td>
+                        <td>{result.constructors.name}</td>
+                        <td>{result.laps}</td>
+                        <td>{result.points}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
             )}
           </div>
         </div>
