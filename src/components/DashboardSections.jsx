@@ -66,8 +66,8 @@ export const DashboardSections = ({ data }) => {
   }
 
   return (
-    <div className="flex flex-row">
-      <div className="w-2/5 m-4">
+    <main className="flex flex-row">
+      <section className="w-2/5 m-4">
         <div className="min-h-screen bg-taupe rounded-md">
         {/* !! Refactor into table */}
           <h2 className="font-bold text-eggplant p-2 mx-2">
@@ -100,9 +100,9 @@ export const DashboardSections = ({ data }) => {
               </div>
             ))}
         </div>
-      </div>
-      <div className="w-1/16">{/* Blank space */}</div>
-      <div className="w-3/5 m-4">
+      </section>
+      <section className="w-1/16">{/* Blank space */}</section>
+      <section className="w-3/5 m-4">
         <div className="flex min-h-screen bg-taupe rounded-md">
           <div className="w-1/2 m-2">
             {selectedRace && (
@@ -191,7 +191,7 @@ export const DashboardSections = ({ data }) => {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };

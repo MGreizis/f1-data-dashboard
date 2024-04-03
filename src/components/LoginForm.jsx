@@ -2,7 +2,7 @@ import LoginButton from "./LoginButton";
 
 export const LoginForm = () => {
   return (
-    <div className="w-[90%] min-h-96 flex items-center justify-center bg-eggplant rounded-md">
+    <main className="w-[90%] min-h-96 flex items-center justify-center bg-eggplant rounded-md">
       <form className="w-full md:w-1/3 rounded-lg">
         <h2 className="text-2xl text-center font-bold text-buff my-4">Login</h2>
         <div className="px-12 pb-10">
@@ -28,6 +28,6 @@ export const LoginForm = () => {
           <LoginButton buttonText="Register" path="/dashboard"/>
         </div>
       </form>
-    </div>
+    </main>
   );
 };
