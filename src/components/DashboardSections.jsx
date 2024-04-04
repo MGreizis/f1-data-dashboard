@@ -14,7 +14,7 @@ export const DashboardSections = ({ data }) => {
   const [driverData, setDriverData] = useState(null);
   const [constructorModalOpen, setConstructorModalOpen] = useState(false);
   const [constructorData, setConstructorData] = useState(null);
-  
+
   const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
   const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -101,12 +101,12 @@ export const DashboardSections = ({ data }) => {
   const closeDriverModal = () => {
     setDriverData(null);
     setDriverModalOpen(false);
-  }
+  };
 
   const closeConstructorModal = () => {
     setConstructorData(null);
     setConstructorModalOpen(false);
-  }
+  };
 
   const handleShowQuali = (race) => {
     setSelectedRace(race);
@@ -116,7 +116,7 @@ export const DashboardSections = ({ data }) => {
     <main className="flex flex-row">
       <section className="w-1/3 m-4">
         <div className="min-h-screen bg-taupe rounded-md">
-        {/* !! Refactor into table */}
+          {/* !! Refactor into table */}
           <h2 className="font-bold text-eggplant p-2 mx-2">
             Rnd &#160; &#160; &#160; Circuit
           </h2>
@@ -127,12 +127,12 @@ export const DashboardSections = ({ data }) => {
                 className="flex items-center justify-between"
               >
                 {/* <div className="flex items-center space-x-4"> */}
-                  <div className="flex items-center justify-center mx-4 font-bold">
-                    {race.round}
-                  </div>
-                  <div>
-                    <h2>{race.name}</h2>
-                  </div>
+                <div className="flex items-center justify-center mx-4 font-bold">
+                  {race.round}
+                </div>
+                <div>
+                  <h2>{race.name}</h2>
+                </div>
                 {/* </div> */}
                 <div className="flex mr-2">
                   <ResultsButton
@@ -155,9 +155,23 @@ export const DashboardSections = ({ data }) => {
             {selectedRace && (
               <div className="p-2">
                 <h2>
-                  {selectedRace.name}, Round {selectedRace.round},{" "}
-                  {selectedRace.year}, <a href={selectedRace.circuits.url} target="_blank" rel="noopener noreferrer">{selectedRace.circuits.name}</a>, {" "}
-                  {selectedRace.date}, <a href={selectedRace.url} target="_blank" rel="noopener noreferrer">Race Information</a>
+                  {selectedRace.year}, Round {selectedRace.round},{" "}
+                  {selectedRace.name},{" "}
+                  <a
+                    href={selectedRace.circuits.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {selectedRace.circuits.name}
+                  </a>
+                  , {selectedRace.date},{" "}
+                  <a
+                    href={selectedRace.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Race Information
+                  </a>
                 </h2>
               </div>
             )}
@@ -180,19 +194,36 @@ export const DashboardSections = ({ data }) => {
                     </thead>
                     <tbody>
                       {qualifyingTimes.map((qualifying, index) => (
-                        <tr key={`${index}-${qualifying.position}-${qualifying.drivers.driverId}`}>
+                        <tr
+                          key={`${index}-${qualifying.position}-${qualifying.drivers.driverId}`}
+                        >
                           <td>{qualifying.position}</td>
-                          <td 
-                            key={`${index}-${qualifying.drivers.driverId}-${qualifying.drivers.forename}`} 
-                            className={index < 3 ? "font-bold py-2 hover:underline hover:cursor-pointer" : "py-2 hover:underline hover:cursor-pointer"}
-                            onClick={() => openDriverModal(qualifying.drivers.driverId)}
+                          <td
+                            key={`${index}-${qualifying.drivers.driverId}-${qualifying.drivers.forename}`}
+                            className={
+                              index < 3
+                                ? "font-bold py-2 hover:underline hover:cursor-pointer"
+                                : "py-2 hover:underline hover:cursor-pointer"
+                            }
+                            onClick={() =>
+                              openDriverModal(qualifying.drivers.driverId)
+                            }
                           >
-                            {qualifying.drivers.forename} {qualifying.drivers.surname}
+                            {qualifying.drivers.forename}{" "}
+                            {qualifying.drivers.surname}
                           </td>
                           <td
-                            key={`${index}-${qualifying.constructors.constructorId}`} 
-                            className={index < 3 ? "font-bold py-2 hover:underline hover:cursor-pointer" : "py-2 hover:underline hover:cursor-pointer"}
-                            onClick={() => openConstructorModal(qualifying.constructors.constructorId)}
+                            key={`${index}-${qualifying.constructors.constructorId}`}
+                            className={
+                              index < 3
+                                ? "font-bold py-2 hover:underline hover:cursor-pointer"
+                                : "py-2 hover:underline hover:cursor-pointer"
+                            }
+                            onClick={() =>
+                              openConstructorModal(
+                                qualifying.constructors.constructorId
+                              )
+                            }
                           >
                             {qualifying.constructors.name}
                           </td>
@@ -210,9 +241,7 @@ export const DashboardSections = ({ data }) => {
           <div className="w-1/2 m-2">
             {raceResults && (
               <>
-                <h2 className="text-center font-bold text-xl py-2">
-                  Results
-                </h2>
+                <h2 className="text-center font-bold text-xl py-2">Results</h2>
                 <table className="text-center mx-2">
                   <thead>
                     <tr>
@@ -225,24 +254,45 @@ export const DashboardSections = ({ data }) => {
                   </thead>
                   <tbody>
                     {raceResults.map((result, index) => (
-                      <tr 
-                        key={`${index}-${result.races.round}-${result.races.name}`} 
-                        className={index < 3 ? "bg-wenge text-white my-2 divide-y divide-coyote" : "divide-y divide-coyote"}
+                      <tr
+                        key={`${index}-${result.races.round}-${result.races.name}`}
+                        className={
+                          index < 3
+                            ? "bg-wenge text-white my-2 divide-y divide-coyote"
+                            : "divide-y divide-coyote"
+                        }
                       >
-                        <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
+                        <td
+                          key={`${index}-pos`}
+                          className={index < 3 ? "font-bold" : ""}
+                        >
                           {result.positionText}
                         </td>
-                        <td 
-                          key={`${index}-${result.drivers.driverId}-${result.drivers.forename}`} 
-                          className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
-                          onClick={() => openDriverModal(result.drivers.driverId)}
+                        <td
+                          key={`${index}-${result.drivers.driverId}-${result.drivers.forename}`}
+                          className={
+                            index < 3
+                              ? "font-bold py-3 hover:underline hover:cursor-pointer"
+                              : "py-3 hover:underline hover:cursor-pointer"
+                          }
+                          onClick={() =>
+                            openDriverModal(result.drivers.driverId)
+                          }
                         >
                           {result.drivers.forename} {result.drivers.surname}
                         </td>
                         <td
-                            key={`${index}-${result.constructors.constructorId}`} 
-                            className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
-                            onClick={() => openConstructorModal(result.constructors.constructorId)}                        
+                          key={`${index}-${result.constructors.constructorId}`}
+                          className={
+                            index < 3
+                              ? "font-bold py-3 hover:underline hover:cursor-pointer"
+                              : "py-3 hover:underline hover:cursor-pointer"
+                          }
+                          onClick={() =>
+                            openConstructorModal(
+                              result.constructors.constructorId
+                            )
+                          }
                         >
                           {result.constructors.name}
                         </td>
@@ -257,8 +307,16 @@ export const DashboardSections = ({ data }) => {
           </div>
         </div>
       </section>
-      <DriverModal show={driverModalOpen} close={closeDriverModal} driverData={driverData} />
-      <ConstructorModal show={constructorModalOpen} close={closeConstructorModal} constructorData={constructorData} />
+      <DriverModal
+        show={driverModalOpen}
+        close={closeDriverModal}
+        driverData={driverData}
+      />
+      <ConstructorModal
+        show={constructorModalOpen}
+        close={closeConstructorModal}
+        constructorData={constructorData}
+      />
     </main>
   );
 };
