@@ -10,18 +10,27 @@ const DriverModal = ({ show, close, driverData }) => {
   )
 
   const handleAddToFavorites = () => {
-    const newFavorite = {
-      forename: driverData.forename,
-      surname: driverData.surname,
-      dob: driverData.dob,
-      nationality: driverData.nationality,
-    };
+    const isDuplicate = favorites.some(
+      (favorite) => 
+        favorite.forename === driverData.forename &&
+        favorite.surname === driverData.surname
+    )
 
-    const updatedFavorites = [...favorites, newFavorite];
-    setFavorites(updatedFavorites);
-
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-    console.log("Added to favorites")
+    if (!isDuplicate) {
+      const newFavorite = {
+        forename: driverData.forename,
+        surname: driverData.surname,
+        dob: driverData.dob,
+        nationality: driverData.nationality,
+      };
+  
+      const updatedFavorites = [...favorites, newFavorite];
+      setFavorites(updatedFavorites);
+  
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    } else {
+      alert("Element already added to favorites")
+    }
   }
 
   return (
