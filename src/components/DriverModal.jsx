@@ -1,5 +1,7 @@
 import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
+// import FavoriteIcon from '@mui/icons-material/Favorite';
+// import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const DriverModal = ({ show, close, driverData }) => {
   return (
@@ -31,10 +33,16 @@ const DriverModal = ({ show, close, driverData }) => {
           </div>
 
           <div className="w-1/3 p-4">
-            <button className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" onClick={close}>
+            <button 
+              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" 
+              onClick={close}
+            >
               Close
             </button>
-            <button className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" onClick={close}>
+            <button 
+              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" 
+              onClick={close}
+            >
               Add to Favorites
             </button>
           </div>
