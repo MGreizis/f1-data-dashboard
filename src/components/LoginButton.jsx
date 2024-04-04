@@ -9,7 +9,7 @@ const LoginButton = ({ buttonText, path }) => {
 
   return (
     <button type="submit"
-      className="w-full py-2 mt-4 rounded-full bg-buff text-eggplant focus:outline-none"
+      className="w-full py-2 mt-4 rounded-full bg-auburn text-slate-200 focus:outline-none"
       onClick={handleClick}
     >
       {buttonText}
