@@ -3,12 +3,10 @@ import { Button, Modal, Typography, Box } from "@mui/material";
 
 export const FavoritesModalButton = () => {
   const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
   const handleFavoritesOpen = () => {
-    const favoritesExist = false;
-    if (favoritesExist) {
-      setFavoritesOpen(true);
-    }
+    setFavoritesOpen(true);
   };
 
   const handleFavoritesClose = () => {
@@ -34,12 +32,14 @@ export const FavoritesModalButton = () => {
             p: 4,
           }}
         >
-          <Typography variant="h6" component="h2" gutterBottom>
+          <Typography variant="h2" component="h2" gutterBottom>
             Favorites
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            Content specific to your applications favorites functionality.
-          </Typography>
+          {favorites.map((favorite, index) => (
+            <Typography key={index} variant="body1" gutterBottom>
+              {favorite.forename} {favorite.surname}
+            </Typography>
+          ))}
         </Box>
       </Modal>
     </>

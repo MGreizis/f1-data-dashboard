@@ -2,8 +2,28 @@ import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
 // import FavoriteIcon from '@mui/icons-material/Favorite';
 // import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useState } from "react";
 
 const DriverModal = ({ show, close, driverData }) => {
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  )
+
+  const handleAddToFavorites = () => {
+    const newFavorite = {
+      forename: driverData.forename,
+      surname: driverData.surname,
+      dob: driverData.dob,
+      nationality: driverData.nationality,
+    };
+
+    const updatedFavorites = [...favorites, newFavorite];
+    setFavorites(updatedFavorites);
+
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    console.log("Added to favorites")
+  }
+
   return (
     <Modal dismissible show={show} onClose={close}>
       {driverData && (
@@ -41,7 +61,7 @@ const DriverModal = ({ show, close, driverData }) => {
             </button>
             <button 
               className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" 
-              onClick={close}
+              onClick={handleAddToFavorites}
             >
               Add to Favorites
             </button>
