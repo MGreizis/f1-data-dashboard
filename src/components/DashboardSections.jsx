@@ -2,11 +2,17 @@ import { useState } from "react";
 import ResultsButton from "./ResultsButton";
 import StandingsButton from "./StandingsButton";
 import { createClient } from "@supabase/supabase-js";
+import DriverModal from "./DriverModal";
+import ConstructorModal from "./ConstructorModal";
 
 export const DashboardSections = ({ data }) => {
   const [selectedRace, setSelectedRace] = useState(null);
   const [raceResults, setRaceResults] = useState(null);
   const [qualifyingTimes, setQualifyingTimes] = useState(null);
+  const [driverModalOpen, setDriverModalOpen] = useState(false);
+  const [driverData, setDriverData] = useState(null);
+  const [constructorModalOpen, setConstructorModalOpen] = useState(false);
+  const [constructorData, setConstructorData] = useState(null);
 
   const handleShowQuali = (race) => {
     setSelectedRace(race);
@@ -23,7 +29,7 @@ export const DashboardSections = ({ data }) => {
         const { data, error } = await supabase
           .from("results")
           .select(
-            `drivers (driverRef, code, forename, surname), races (name, round, year, date), constructors (name, constructorRef), positionText, points, laps`
+            `drivers (driverRef, code, forename, surname, driverId), races (name, round, year, date), constructors (name, constructorRef, constructorId), positionText, points, laps`
           )
           .eq("raceId", raceId);
 
@@ -49,7 +55,7 @@ export const DashboardSections = ({ data }) => {
         const { data, error } = await supabase
           .from("qualifying")
           .select(
-            `races (raceId, year, name, date, time), drivers (driverRef, forename, surname, number, code, nationality), q1, q2, q3, constructors (name), position`
+            `races (raceId, year, name, date, time), drivers (driverRef, forename, surname, number, code, nationality, driverId), q1, q2, q3, constructors (name, constructorId), position`
           )
           .eq("raceId", raceId)
           .order("q3", { ascending: true });
@@ -63,6 +69,70 @@ export const DashboardSections = ({ data }) => {
     } catch (err) {
       console.error("Error fetching qualifying times:", err.message);
     }
+  }
+
+  const openDriverModal = async (driverId) => {
+    try {
+      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+      if (supabaseUrl && supabaseAnonKey) {
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+        const { data, error } = await supabase
+          .from("drivers")
+          .select("forename, surname, dob, nationality, url")
+          .eq("driverId", driverId)
+          .single();
+
+        if (error) {
+          throw error;
+        } else {
+          setDriverData(data);
+          setDriverModalOpen(true);
+          console.log("Driver data:", data);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching driver details:", error.message);
+    }
+  };
+
+  const openConstructorModal = async (constructorId) => {
+    try {
+      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+      if (supabaseUrl && supabaseAnonKey) {
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+        const { data, error } = await supabase
+          .from("constructors")
+          .select("name, nationality, url")
+          .eq("constructorId", constructorId)
+          .single();
+
+        if (error) {
+          throw error;
+        } else {
+          setConstructorData(data);
+          setConstructorModalOpen(true);
+          console.log("Driver data:", data);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching constructor details:", error.message);
+    }
+  };
+
+  const closeDriverModal = () => {
+    setDriverData(null);
+    setDriverModalOpen(false);
+  }
+
+  const closeConstructorModal = () => {
+    setConstructorData(null);
+    setConstructorModalOpen(false);
   }
 
   return (
@@ -136,12 +206,19 @@ export const DashboardSections = ({ data }) => {
                         <tr key={index}>
                           <td>{qualifying.position}</td>
                           <td 
-                            key={index} 
-                            className={index < 3 ? "font-bold py-3" : "py-3"}
+                            key={`${index}-${qualifying.drivers.driverId}`} 
+                            className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
+                            onClick={() => openDriverModal(qualifying.drivers.driverId)}
                           >
                             {qualifying.drivers.forename} {qualifying.drivers.surname}
                           </td>
-                          <td>{qualifying.constructors.name}</td>
+                          <td
+                            key={`${index}-${qualifying.constructors.constructorId}`} 
+                            className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
+                            onClick={() => openConstructorModal(qualifying.constructors.constructorId)}
+                          >
+                            {qualifying.constructors.name}
+                          </td>
                           <td>{qualifying.q1}</td>
                           <td className="px-2">{qualifying.q2}</td>
                           <td className="px-2 pr-3">{qualifying.q3}</td>
@@ -180,11 +257,18 @@ export const DashboardSections = ({ data }) => {
                         </td>
                         <td 
                           key={index} 
-                          className={index < 3 ? "font-bold py-3" : "py-3"}
+                          className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
+                          onClick={() => openDriverModal(result.drivers.driverId)}
                         >
                           {result.drivers.forename} {result.drivers.surname}
                         </td>
-                        <td>{result.constructors.name}</td>
+                        <td
+                            key={`${index}-${result.constructors.constructorId}`} 
+                            className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
+                            onClick={() => openConstructorModal(result.constructors.constructorId)}                        
+                        >
+                          {result.constructors.name}
+                        </td>
                         <td>{result.laps}</td>
                         <td>{result.points}</td>
                       </tr>
@@ -196,6 +280,8 @@ export const DashboardSections = ({ data }) => {
           </div>
         </div>
       </section>
+      <DriverModal show={driverModalOpen} close={closeDriverModal} driverData={driverData} />
+      <ConstructorModal show={constructorModalOpen} close={closeConstructorModal} constructorData={constructorData} />
     </main>
   );
 };
