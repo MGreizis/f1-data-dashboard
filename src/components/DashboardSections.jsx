@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
 
+// !! PLEASE REMEMBER TO REFACTOR THIS INTO COMPONENTS
 export const DashboardSections = ({ data }) => {
   const [selectedRace, setSelectedRace] = useState(null);
   const [raceResults, setRaceResults] = useState(null);
@@ -13,31 +14,24 @@ export const DashboardSections = ({ data }) => {
   const [driverData, setDriverData] = useState(null);
   const [constructorModalOpen, setConstructorModalOpen] = useState(false);
   const [constructorData, setConstructorData] = useState(null);
-
-  const handleShowQuali = (race) => {
-    setSelectedRace(race);
-  };
+  
+  const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+  const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   const fetchRaceResults = async (raceId) => {
     try {
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+      const { data, error } = await supabase
+        .from("results")
+        .select(
+          `drivers (driverRef, code, forename, surname, driverId), races (name, round, year, date), constructors (name, constructorRef, constructorId), positionText, points, laps`
+        )
+        .eq("raceId", raceId);
 
-      if (supabaseUrl && supabaseAnonKey) {
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-        const { data, error } = await supabase
-          .from("results")
-          .select(
-            `drivers (driverRef, code, forename, surname, driverId), races (name, round, year, date), constructors (name, constructorRef, constructorId), positionText, points, laps`
-          )
-          .eq("raceId", raceId);
-
-        if (error) {
-          console.error("Error fetching race results:", error.message);
-        } else {
-          setRaceResults(data);
-        }
+      if (error) {
+        console.error("Error fetching race results:", error.message);
+      } else {
+        setRaceResults(data);
       }
     } catch (error) {
       console.error("Error fetching race results:", error.message);
@@ -46,52 +40,38 @@ export const DashboardSections = ({ data }) => {
 
   const fetchQualiTimes = async (raceId) => {
     try {
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+      const { data, error } = await supabase
+        .from("qualifying")
+        .select(
+          `races (raceId, year, name, date, time), drivers (driverRef, forename, surname, number, code, nationality, driverId), q1, q2, q3, constructors (name, constructorId), position`
+        )
+        .eq("raceId", raceId)
+        .order("q3", { ascending: true });
 
-      if (supabaseUrl && supabaseAnonKey) {
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-        const { data, error } = await supabase
-          .from("qualifying")
-          .select(
-            `races (raceId, year, name, date, time), drivers (driverRef, forename, surname, number, code, nationality, driverId), q1, q2, q3, constructors (name, constructorId), position`
-          )
-          .eq("raceId", raceId)
-          .order("q3", { ascending: true });
-
-        if (error) {
-          console.error("Error fetching qualifying times:", error.message);
-        } else {
-          setQualifyingTimes(data);
-        }
+      if (error) {
+        console.error("Error fetching qualifying times:", error.message);
+      } else {
+        setQualifyingTimes(data);
       }
     } catch (err) {
       console.error("Error fetching qualifying times:", err.message);
     }
-  }
+  };
 
   const openDriverModal = async (driverId) => {
     try {
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+      const { data, error } = await supabase
+        .from("drivers")
+        .select("forename, surname, dob, nationality, url")
+        .eq("driverId", driverId)
+        .single();
 
-      if (supabaseUrl && supabaseAnonKey) {
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-        const { data, error } = await supabase
-          .from("drivers")
-          .select("forename, surname, dob, nationality, url")
-          .eq("driverId", driverId)
-          .single();
-
-        if (error) {
-          throw error;
-        } else {
-          setDriverData(data);
-          setDriverModalOpen(true);
-          console.log("Driver data:", data);
-        }
+      if (error) {
+        throw error;
+      } else {
+        setDriverData(data);
+        setDriverModalOpen(true);
+        console.log("Driver data:", data);
       }
     } catch (error) {
       console.error("Error fetching driver details:", error.message);
@@ -100,25 +80,18 @@ export const DashboardSections = ({ data }) => {
 
   const openConstructorModal = async (constructorId) => {
     try {
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+      const { data, error } = await supabase
+        .from("constructors")
+        .select("name, nationality, url")
+        .eq("constructorId", constructorId)
+        .single();
 
-      if (supabaseUrl && supabaseAnonKey) {
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-        const { data, error } = await supabase
-          .from("constructors")
-          .select("name, nationality, url")
-          .eq("constructorId", constructorId)
-          .single();
-
-        if (error) {
-          throw error;
-        } else {
-          setConstructorData(data);
-          setConstructorModalOpen(true);
-          console.log("Driver data:", data);
-        }
+      if (error) {
+        throw error;
+      } else {
+        setConstructorData(data);
+        setConstructorModalOpen(true);
+        console.log("Driver data:", data);
       }
     } catch (error) {
       console.error("Error fetching constructor details:", error.message);
@@ -135,9 +108,13 @@ export const DashboardSections = ({ data }) => {
     setConstructorModalOpen(false);
   }
 
+  const handleShowQuali = (race) => {
+    setSelectedRace(race);
+  };
+
   return (
     <main className="flex flex-row">
-      <section className="w-2/5 m-4">
+      <section className="w-1/3 m-4">
         <div className="min-h-screen bg-taupe rounded-md">
         {/* !! Refactor into table */}
           <h2 className="font-bold text-eggplant p-2 mx-2">
@@ -172,7 +149,7 @@ export const DashboardSections = ({ data }) => {
         </div>
       </section>
       <section className="w-1/16">{/* Blank space */}</section>
-      <section className="w-3/5 m-4">
+      <section className="w-2/3 m-4">
         <div className="flex min-h-screen bg-taupe rounded-md">
           <div className="w-1/2 m-2">
             {selectedRace && (
@@ -184,7 +161,7 @@ export const DashboardSections = ({ data }) => {
                 </h2>
               </div>
             )}
-            <div className="w-1/2 m-2">
+            <div className="m-2">
               {qualifyingTimes && (
                 <>
                   <h2 className="text-center font-bold text-xl py-2">
@@ -195,7 +172,7 @@ export const DashboardSections = ({ data }) => {
                       <tr>
                         <th className="px-2">Pos</th>
                         <th className="px-2">Driver</th>
-                        <th>Constructor</th>
+                        <th className="px-2">Constructor</th>
                         <th>Q1</th>
                         <th>Q2</th>
                         <th>Q3</th>
@@ -203,25 +180,25 @@ export const DashboardSections = ({ data }) => {
                     </thead>
                     <tbody>
                       {qualifyingTimes.map((qualifying, index) => (
-                        <tr key={index}>
+                        <tr key={`${index}-${qualifying.position}-${qualifying.drivers.driverId}`}>
                           <td>{qualifying.position}</td>
                           <td 
-                            key={`${index}-${qualifying.drivers.driverId}`} 
-                            className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
+                            key={`${index}-${qualifying.drivers.driverId}-${qualifying.drivers.forename}`} 
+                            className={index < 3 ? "font-bold py-2 hover:underline hover:cursor-pointer" : "py-2 hover:underline hover:cursor-pointer"}
                             onClick={() => openDriverModal(qualifying.drivers.driverId)}
                           >
                             {qualifying.drivers.forename} {qualifying.drivers.surname}
                           </td>
                           <td
                             key={`${index}-${qualifying.constructors.constructorId}`} 
-                            className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
+                            className={index < 3 ? "font-bold py-2 hover:underline hover:cursor-pointer" : "py-2 hover:underline hover:cursor-pointer"}
                             onClick={() => openConstructorModal(qualifying.constructors.constructorId)}
                           >
                             {qualifying.constructors.name}
                           </td>
-                          <td>{qualifying.q1}</td>
-                          <td className="px-2">{qualifying.q2}</td>
-                          <td className="px-2 pr-3">{qualifying.q3}</td>
+                          <td className="px-2">{qualifying.q1}</td>
+                          <td className="px-1">{qualifying.q2}</td>
+                          <td className="px-2">{qualifying.q3}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -249,14 +226,14 @@ export const DashboardSections = ({ data }) => {
                   <tbody>
                     {raceResults.map((result, index) => (
                       <tr 
-                        key={index} 
+                        key={`${index}-${result.races.round}-${result.races.name}`} 
                         className={index < 3 ? "bg-wenge text-white my-2 divide-y divide-coyote" : "divide-y divide-coyote"}
                       >
                         <td key={`${index}-pos`} className={index < 3 ? "font-bold" : ""}>   
                           {result.positionText}
                         </td>
                         <td 
-                          key={index} 
+                          key={`${index}-${result.drivers.driverId}-${result.drivers.forename}`} 
                           className={index < 3 ? "font-bold py-3 hover:underline hover:cursor-pointer" : "py-3 hover:underline hover:cursor-pointer"}
                           onClick={() => openDriverModal(result.drivers.driverId)}
                         >
