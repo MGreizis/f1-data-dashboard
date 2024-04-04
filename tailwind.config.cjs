@@ -3,7 +3,7 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.jsx",
-    'node_modules/flowbite-react/lib/esm/**/*.js'
+    "node_modules/flowbite-react/lib/esm/**/*.js",
   ],
   theme: {
     extend: {
@@ -21,11 +21,9 @@ module.exports = {
         amaranth: "#DB324D",
         wenge: "#56494E",
         taupe: "#A29C9B",
-        darkred: "#511C29"
-      }
+        darkred: "#511C29",
+      },
     },
   },
-  plugins: [
-    require('flowbite/plugin')
-  ],
-}
+  plugins: [require("flowbite/plugin")],
+};
