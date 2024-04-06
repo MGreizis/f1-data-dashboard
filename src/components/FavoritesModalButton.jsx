@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal, Typography, Box, Grid } from "@mui/material";
 
 export const FavoritesModalButton = () => {
@@ -6,10 +6,10 @@ export const FavoritesModalButton = () => {
   const [favoritesCleared, setFavoritesCleared] = useState(false);
   const [favorites, setFavorites] = useState([]);
 
-  // useEffect(() => {
-  //   const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-  //   setFavorites(storedFavorites);
-  // }, [favorites])
+  useEffect(() => {
+    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(storedFavorites);
+  }, [favorites])
 
   const handleFavoritesOpen = () => {
     setFavoritesOpen(true);
