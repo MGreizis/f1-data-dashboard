@@ -4,6 +4,7 @@ import StandingsButton from "./StandingsButton";
 import { createClient } from "@supabase/supabase-js";
 import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
+import CircuitModal from "./CircuitModal";
 
 // !! PLEASE REMEMBER TO REFACTOR THIS INTO COMPONENTS
 export const DashboardSections = ({ data }) => {
@@ -14,6 +15,8 @@ export const DashboardSections = ({ data }) => {
   const [driverData, setDriverData] = useState(null);
   const [constructorModalOpen, setConstructorModalOpen] = useState(false);
   const [constructorData, setConstructorData] = useState(null);
+  const [circuitModalOpen, setCircuitModalOpen] = useState(false);
+  const [circuitData, setCircuitData] = useState(null);
 
   const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
   const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -98,6 +101,26 @@ export const DashboardSections = ({ data }) => {
     }
   };
 
+  const openCircuitModal = async (circuitId) => {
+    try {
+      const { data, error } = await supabase
+        .from("circuits")
+        .select("name, url, location, country")
+        .eq("circuitId", circuitId)
+        .single();
+
+        if (error) {
+          throw error;
+        } else {
+          setCircuitData(data);
+          setCircuitModalOpen(true);
+          console.log("Circuit data:", data);
+        }
+    } catch (error) {
+      console.error("Error fetching circuit details:", error.message);
+    }
+  }
+
   const closeDriverModal = () => {
     setDriverData(null);
     setDriverModalOpen(false);
@@ -106,6 +129,11 @@ export const DashboardSections = ({ data }) => {
   const closeConstructorModal = () => {
     setConstructorData(null);
     setConstructorModalOpen(false);
+  };
+
+  const closeCircuitModal = () => {
+    setCircuitData(null);
+    setCircuitModalOpen(false);
   };
 
   const handleShowQuali = (race) => {
@@ -158,9 +186,8 @@ export const DashboardSections = ({ data }) => {
                   {selectedRace.year}, Round {selectedRace.round},{" "}
                   {selectedRace.name},{" "}
                   <a
-                    href={selectedRace.circuits.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={() => openCircuitModal(selectedRace.circuits.circuitId)}
+                    className="cursor-pointer"
                   >
                     {selectedRace.circuits.name}
                   </a>
@@ -316,6 +343,11 @@ export const DashboardSections = ({ data }) => {
         show={constructorModalOpen}
         close={closeConstructorModal}
         constructorData={constructorData}
+      />
+      <CircuitModal
+        show={circuitModalOpen}
+        close={closeCircuitModal}
+        circuitData={circuitData}
       />
     </main>
   );
