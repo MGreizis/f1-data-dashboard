@@ -80,7 +80,11 @@ export const FavoritesModalButton = () => {
               <Typography variant="h5" gutterBottom>
                 Favorite Constructors
               </Typography>
-              {/* Map over favorite constructors similarly */}
+              {favorites.map((favorite, index) => (
+                <Typography key={index} variant="body1" gutterBottom>
+                  {favorite.constructorName}
+                </Typography>
+              ))}
             </Grid>
             <Grid item xs={4}>
               <Typography variant="h5" gutterBottom>
