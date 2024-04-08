@@ -2,33 +2,31 @@ import { useState } from "react";
 import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
 
-const CircuitModal = ({ show, close, circuitData }) => {
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || []
-  )
+const CircuitModal = ({ show, close, circuitData, favs, setFavs }) => {
+  const addToFavs = () => {
+    // check if favs has duplicates
+    const isDuplicate = favs.some((favourite) => {
+      if (favourite.type === "circuit") {
+        return favourite.name === circuitData.name;
+      }
+      return false;
+    });
 
-  const handleAddToFavorites = () => {
-    const isDuplicate = favorites.some(
-      (favorite) => 
-        favorite.circuitName === circuitData.name
-    )
-
-    if (!isDuplicate) {
-      const newFavorite = {
-        circuitName: circuitData.name,
-        location: circuitData.location,
-        country: circuitData.country,
-        url: circuitData.url
-      };
-  
-      const updatedFavorites = [...favorites, newFavorite];
-      setFavorites(updatedFavorites);
-  
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-    } else {
-      alert("Element already added to favorites")
+    if (isDuplicate) {
+      alert("Circuit already added to favorites");
+      return;
     }
-  }
+
+    const newFavorite = {
+      name: circuitData.name,
+      nationality: circuitData.nationality,
+      url: circuitData.url,
+      type: "circuit",
+    };
+
+    const updatedFavs = [...favs, newFavorite];
+    setFavs(updatedFavs);
+  };
 
   return (
     <Modal dismissible show={show} onClose={close}>
@@ -50,11 +48,7 @@ const CircuitModal = ({ show, close, circuitData }) => {
                 </Typography>
 
                 <Typography variant="p" component="p">
-                  <a
-                    href={circuitData.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={circuitData.url} target="_blank" rel="noreferrer">
                     Wikipedia
                   </a>
                 </Typography>
@@ -77,7 +71,7 @@ const CircuitModal = ({ show, close, circuitData }) => {
             </button>
             <button
               className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
-              onClick={handleAddToFavorites}
+              onClick={addToFavs}
             >
               Add to Favorites
             </button>

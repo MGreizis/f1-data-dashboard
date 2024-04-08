@@ -109,17 +109,17 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
         .eq("circuitId", circuitId)
         .single();
 
-        if (error) {
-          throw error;
-        } else {
-          setCircuitData(data);
-          setCircuitModalOpen(true);
-          console.log("Circuit data:", data);
-        }
+      if (error) {
+        throw error;
+      } else {
+        setCircuitData(data);
+        setCircuitModalOpen(true);
+        console.log("Circuit data:", data);
+      }
     } catch (error) {
       console.error("Error fetching circuit details:", error.message);
     }
-  }
+  };
 
   const closeDriverModal = () => {
     setDriverData(null);
@@ -186,7 +186,9 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
                   {selectedRace.year}, Round {selectedRace.round},{" "}
                   {selectedRace.name},{" "}
                   <a
-                    onClick={() => openCircuitModal(selectedRace.circuits.circuitId)}
+                    onClick={() =>
+                      openCircuitModal(selectedRace.circuits.circuitId)
+                    }
                     className="cursor-pointer"
                   >
                     {selectedRace.circuits.name}
@@ -352,6 +354,8 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
         show={circuitModalOpen}
         close={closeCircuitModal}
         circuitData={circuitData}
+        favs={favs}
+        setFavs={setFavs}
       />
     </main>
   );
