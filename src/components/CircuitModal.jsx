@@ -1,34 +1,34 @@
 import { useState } from "react";
 import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 const CircuitModal = ({ show, close, circuitData }) => {
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem("favorites")) || []
-  )
+  );
 
   const handleAddToFavorites = () => {
     const isDuplicate = favorites.some(
-      (favorite) => 
-        favorite.circuitName === circuitData.name
-    )
+      (favorite) => favorite.circuitName === circuitData.name
+    );
 
     if (!isDuplicate) {
       const newFavorite = {
         circuitName: circuitData.name,
         location: circuitData.location,
         country: circuitData.country,
-        url: circuitData.url
+        url: circuitData.url,
       };
-  
+
       const updatedFavorites = [...favorites, newFavorite];
       setFavorites(updatedFavorites);
-  
+
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     } else {
-      alert("Element already added to favorites")
+      alert("Element already added to favorites");
     }
-  }
+  };
 
   return (
     <Modal dismissible show={show} onClose={close}>
@@ -50,11 +50,7 @@ const CircuitModal = ({ show, close, circuitData }) => {
                 </Typography>
 
                 <Typography variant="p" component="p">
-                  <a
-                    href={circuitData.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={circuitData.url} target="_blank" rel="noreferrer">
                     Wikipedia
                   </a>
                 </Typography>

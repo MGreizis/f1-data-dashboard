@@ -105,7 +105,7 @@ export const DashboardSections = ({ data }) => {
     try {
       const { data, error } = await supabase
         .from("circuits")
-        .select("name, url, location, country")
+        .select("name, url, location, country, lat, lng")
         .eq("circuitId", circuitId)
         .single();
 
@@ -154,14 +154,12 @@ export const DashboardSections = ({ data }) => {
                 key={`${race.id}-${index}`}
                 className="flex items-center justify-between"
               >
-                {/* <div className="flex items-center space-x-4"> */}
                 <div className="flex items-center justify-center mx-4 font-bold">
                   {race.round}
                 </div>
                 <div>
                   <h2>{race.name}</h2>
                 </div>
-                {/* </div> */}
                 <div className="flex mr-2">
                   <ResultsButton
                     race={race}
