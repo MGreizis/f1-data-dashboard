@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
 
@@ -26,6 +27,33 @@ const ConstructorModal = ({ show, close, constructorData, favs, setFavs }) => {
     const updatedFavs = [...favs, newFavorite];
     setFavs(updatedFavs);
   };
+// const ConstructorModal = ({ show, close, constructorData }) => {
+//   const [favorites, setFavorites] = useState(
+//     JSON.parse(localStorage.getItem("favorites")) || []
+//   )
+
+//   const handleAddToFavorites = () => {
+//     const isDuplicate = favorites.some(
+//       (favorite) => 
+//         favorite.constructorName === constructorData.name
+//     )
+
+//     if (!isDuplicate) {
+//       const newFavorite = {
+//         constructorName: constructorData.name,
+//         country: constructorData.nationality,
+//         url: constructorData.url
+//       };
+  
+//       const updatedFavorites = [...favorites, newFavorite];
+//       setFavorites(updatedFavorites);
+  
+//       localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+//     } else {
+//       alert("Element already added to favorites")
+//     }
+//   }
+
   return (
     <Modal dismissible show={show} onClose={close}>
       {constructorData && (
@@ -69,8 +97,12 @@ const ConstructorModal = ({ show, close, constructorData, favs, setFavs }) => {
             </button>
             <button
               className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
-              onClick={addToFavs}
+              onClick={addToFavs} 
             >
+            {/* <button
+              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" 
+              onClick={handleAddToFavorites}
+            > */}
               Add to Favorites
             </button>
           </div>

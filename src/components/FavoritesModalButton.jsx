@@ -86,6 +86,11 @@ export const FavoritesModalButton = (favs, setFavs) => {
                     {favorite.name}
                   </Typography>
                 ))}
+              {/* {favorites.map((favorite, index) => (
+                <Typography key={index} variant="body1" gutterBottom>
+                  {favorite.constructorName}
+                </Typography>
+              ))} */}
             </Grid>
             <Grid item xs={4}>
               <Typography variant="h5" gutterBottom>
@@ -102,6 +107,11 @@ export const FavoritesModalButton = (favs, setFavs) => {
                     {favorite.name}
                   </Typography>
                 ))}
+              {/* {favorites.map((favorite, index) => (
+                <Typography key={index} variant="body1" gutterBottom>
+                  {favorite.circuitName}
+                </Typography>
+              ))} */}
             </Grid>
           </Grid>
         </Box>
