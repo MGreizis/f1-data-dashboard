@@ -1,15 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Modal, Typography, Box, Grid } from "@mui/material";
 
-export const FavoritesModalButton = () => {
+export const FavoritesModalButton = (favs, setFavs) => {
   const [favoritesOpen, setFavoritesOpen] = useState(false);
-  const [favoritesCleared, setFavoritesCleared] = useState(false);
-  const [favorites, setFavorites] = useState([]);
-
-  useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
-  }, [favorites])
 
   const handleFavoritesOpen = () => {
     setFavoritesOpen(true);
@@ -20,11 +13,7 @@ export const FavoritesModalButton = () => {
   };
 
   const clearFavorites = () => {
-    localStorage.removeItem("favorites");
-    // localStorage.clear();
-    setFavorites([]);
-    setFavoritesCleared(!favoritesCleared);
-    setFavoritesOpen(false);
+    favs.setFavs([]);
   };
 
   return (
@@ -70,23 +59,49 @@ export const FavoritesModalButton = () => {
               <Typography variant="h5" gutterBottom>
                 Favorite Drivers
               </Typography>
-              {favorites.map((favorite, index) => (
-                <Typography key={index} variant="body1" gutterBottom>
-                  {favorite.forename} {favorite.surname}
-                </Typography>
-              ))}
+              {favs.favs
+                .filter((fav) => fav.type === "driver")
+                .map((favorite, index) => (
+                  <Typography
+                    key={`driver-${index}`}
+                    variant="body1"
+                    gutterBottom
+                  >
+                    {favorite.forename} {favorite.surname}
+                  </Typography>
+                ))}
             </Grid>
             <Grid item xs={4}>
               <Typography variant="h5" gutterBottom>
                 Favorite Constructors
               </Typography>
-              {/* Map over favorite constructors similarly */}
+              {favs.favs
+                .filter((fav) => fav.type === "constructor")
+                .map((favorite, index) => (
+                  <Typography
+                    key={`constructor-${index}`}
+                    variant="body1"
+                    gutterBottom
+                  >
+                    {favorite.name}
+                  </Typography>
+                ))}
             </Grid>
             <Grid item xs={4}>
               <Typography variant="h5" gutterBottom>
                 Favorite Circuits
               </Typography>
-              {/* Map over favorite circuits similarly */}
+              {favs.favs
+                .filter((fav) => fav.type === "circuit")
+                .map((favorite, index) => (
+                  <Typography
+                    key={`circuit-${index}`}
+                    variant="body1"
+                    gutterBottom
+                  >
+                    {favorite.name}
+                  </Typography>
+                ))}
             </Grid>
           </Grid>
         </Box>

@@ -16,7 +16,7 @@ export const Router = () => (
         </Layout>
       }
     />
-    <Route 
+    <Route
       path={RoutePaths.DASHBOARD}
       element={
         <Layout>

@@ -2,36 +2,33 @@ import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
 // import FavoriteIcon from '@mui/icons-material/Favorite';
 // import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { useState } from "react";
 
-const DriverModal = ({ show, close, driverData }) => {
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || []
-  )
+const DriverModal = ({ show, close, driverData, favs, setFavs }) => {
+  const addToFavs = () => {
+    // check if favs has duplicates
+    const isDuplicate = favs.some((favourite) => {
+      if (favourite.type === "driver") {
+        return favourite.forename === driverData.forename;
+      }
+      return false;
+    });
 
-  const handleAddToFavorites = () => {
-    const isDuplicate = favorites.some(
-      (favorite) => 
-        favorite.forename === driverData.forename &&
-        favorite.surname === driverData.surname
-    )
-
-    if (!isDuplicate) {
-      const newFavorite = {
-        forename: driverData.forename,
-        surname: driverData.surname,
-        dob: driverData.dob,
-        nationality: driverData.nationality,
-      };
-  
-      const updatedFavorites = [...favorites, newFavorite];
-      setFavorites(updatedFavorites);
-  
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-    } else {
-      alert("Element already added to favorites")
+    if (isDuplicate) {
+      alert("Driver already added to favorites");
+      return;
     }
-  }
+
+    const newFavorite = {
+      forename: driverData.forename,
+      surname: driverData.surname,
+      dob: driverData.dob,
+      nationality: driverData.nationality,
+      type: "driver",
+    };
+
+    const updatedFavs = [...favs, newFavorite];
+    setFavs(updatedFavs);
+  };
 
   return (
     <Modal dismissible show={show} onClose={close}>
@@ -53,24 +50,30 @@ const DriverModal = ({ show, close, driverData }) => {
                 </Typography>
 
                 <Typography variant="p" component="p">
-                  <a href={driverData.url} target="_blank" rel="noreferrer">Wikipedia</a>
+                  <a href={driverData.url} target="_blank" rel="noreferrer">
+                    Wikipedia
+                  </a>
                 </Typography>
 
-                <img src={`https://placehold.co/300x200`} alt="Driver" className="my-2" />
+                <img
+                  src={`https://placehold.co/300x200`}
+                  alt="Driver"
+                  className="my-2"
+                />
               </div>
             </Modal.Body>
           </div>
 
           <div className="w-1/3 p-4">
-            <button 
-              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" 
+            <button
+              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
               onClick={close}
             >
               Close
             </button>
-            <button 
-              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded" 
-              onClick={handleAddToFavorites}
+            <button
+              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
+              onClick={addToFavs}
             >
               Add to Favorites
             </button>
@@ -78,7 +81,7 @@ const DriverModal = ({ show, close, driverData }) => {
         </div>
       )}
     </Modal>
-  )
-}
+  );
+};
 
 export default DriverModal;

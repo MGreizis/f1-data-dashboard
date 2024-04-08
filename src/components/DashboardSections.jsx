@@ -6,7 +6,7 @@ import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
 
 // !! PLEASE REMEMBER TO REFACTOR THIS INTO COMPONENTS
-export const DashboardSections = ({ data }) => {
+export const DashboardSections = ({ data, favs, setFavs }) => {
   const [selectedRace, setSelectedRace] = useState(null);
   const [raceResults, setRaceResults] = useState(null);
   const [qualifyingTimes, setQualifyingTimes] = useState(null);
@@ -311,11 +311,15 @@ export const DashboardSections = ({ data }) => {
         show={driverModalOpen}
         close={closeDriverModal}
         driverData={driverData}
+        favs={favs}
+        setFavs={setFavs}
       />
       <ConstructorModal
         show={constructorModalOpen}
         close={closeConstructorModal}
         constructorData={constructorData}
+        favs={favs}
+        setFavs={setFavs}
       />
     </main>
   );
