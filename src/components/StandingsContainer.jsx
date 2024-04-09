@@ -1,11 +1,11 @@
 import DriverStandings from './DriverStandings';
 import ConstructorStandings from './ConstructorStandings';
 
-const StandingsContainer = ({ raceId }) => {
+const StandingsContainer = ({ raceId, openDriverModal, openConstructorModal }) => {
   return (
-    <div className="flex">
-      <DriverStandings raceId={raceId} />
-      <ConstructorStandings raceId={raceId} />
+    <div className="flex justify-between min-w-full">
+      <DriverStandings raceId={raceId} openDriverModal={openDriverModal} />
+      <ConstructorStandings raceId={raceId} openConstructorModal={openConstructorModal} />
     </div>
   );
 };

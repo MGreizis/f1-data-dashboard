@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 
-const ConstructorStandings = ({ raceId }) => {
+const ConstructorStandings = ({ raceId, openConstructorModal }) => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const ConstructorStandings = ({ raceId }) => {
         const { data, error } = await supabase
           .from("constructorStandings")
           .select(`
-            constructors (constructorRef, name, nationality), 
+            constructors (constructorRef, name, nationality, constructorId), 
             races (name, round, year, date), 
             position, 
             points, 
@@ -44,29 +44,36 @@ const ConstructorStandings = ({ raceId }) => {
   }, [raceId]);
 
   return (
-    <div>
+    <div className="px-4">
       <h2 className="text-xl font-bold text-eggplant text-center my-4">
         Constructor Standings
       </h2>
       <div className="flex flex-col items-center justify-center">
-        <table className="w-full">
+        <table className="text-center mx-2 my-2">
           <thead>
             <tr>
-              <th className="text-center">Pos</th>
-              <th className="text-center">Constructor</th>
-              <th className="text-center">Points</th>
-              <th className="text-center">Wins</th>
+              <th className="px-2">Pos</th>
+              <th className="px-2">Constructor</th>
+              <th className="px-2">Points</th>
+              <th className="px-2">Wins</th>
             </tr>
           </thead>
           <tbody>
             {standings.map((standing, index) => (
-              <tr key={index}>
-                <td className="text-center">{standing.position}</td>
-                <td className="text-center">
+              <tr 
+                key={index}
+                className="my-2 divide-y divide-coyote"
+              >
+                <td className="">{standing.position}</td>
+                <td 
+                  key={index}
+                  className="py-3 hover:underline hover:cursor-pointer"
+                  onClick={() => openConstructorModal(standing.constructors.constructorId)}
+                >
                   {standing.constructors.name} ({standing.constructors.nationality})
                 </td>
-                <td className="text-center">{standing.points}</td>
-                <td className="text-center">{standing.wins}</td>
+                <td className="">{standing.points}</td>
+                <td className="">{standing.wins}</td>
               </tr>
             ))}
           </tbody>

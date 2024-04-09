@@ -10,7 +10,6 @@ export const Home = () => {
       <div className="flex max-h-full flex-col items-center justify-center">
         <Login />
       </div>
-      {/* Centered text */}
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-eggplant text-xl font-bold">Login does not work yet, just click one of the buttons</h2>
       </div>

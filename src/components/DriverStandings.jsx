@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const DriverStandings = ({ raceId }) => {
+const DriverStandings = ({ raceId, openDriverModal }) => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const DriverStandings = ({ raceId }) => {
           .from("driverStandings")
           .select(
             `
-            drivers (driverRef, code, forename, surname), 
+            drivers (driverRef, code, forename, surname, driverId), 
             races (name, round, year, date), 
             position, 
             points, 
@@ -27,7 +27,7 @@ const DriverStandings = ({ raceId }) => {
 
         if (error) {
           console.error("Error fetching driver standings:", error.message);
-        return;
+          return;
         }
 
         if (!data || data.length === 0) {
@@ -45,27 +45,34 @@ const DriverStandings = ({ raceId }) => {
   }, [raceId]);
 
   return (
-    <div>
-      <h2>Driver Standings</h2>
-      <table>
+    <div className="px-4">
+      <h2 className="text-xl font-bold text-eggplant text-center my-4">
+        Driver Standings
+      </h2>
+      <table className="text-center mx-2 my-2">
         <thead>
           <tr>
-            <th>Position</th>
-            <th>Points</th>
-            <th>Wins</th>
-            <th>Driver</th>
-            <th>Constructor</th>
+            <th className="px-2">Pos</th>
+            <th className="px-2">Driver</th>
+            <th className="px-2">Points</th>
+            <th className="px-2">Wins</th>
           </tr>
         </thead>
         <tbody>
           {standings.map((standing, index) => (
-            <tr key={index}>
+            <tr 
+              key={index}
+              className="my-2 divide-y divide-coyote"
+            >
               <td>{standing.position}</td>
-              <td>{standing.points}</td>
-              <td>{standing.wins}</td>
-              <td>
+              <td 
+                className="py-3 hover:underline hover:cursor-pointer"
+                onClick={() => openDriverModal(standing.drivers.driverId)}
+              >
                 {standing.drivers.forename} {standing.drivers.surname}
               </td>
+              <td>{standing.points}</td>
+              <td>{standing.wins}</td>
               <td>{standing.drivers.nationality}</td>
             </tr>
           ))}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Modal, Typography, Box, Grid } from "@mui/material";
 
-export const FavoritesModalButton = (favs, setFavs) => {
+export const FavoritesModalButton = (favs) => {
   const [favoritesOpen, setFavoritesOpen] = useState(false);
 
   const handleFavoritesOpen = () => {

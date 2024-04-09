@@ -5,13 +5,16 @@ import { createClient } from "@supabase/supabase-js";
 import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
 import CircuitModal from "./CircuitModal";
-// import DriverStandings from "./DriverStandings";
-// import ConstructorStandings from "./ConstructorStandings";
 import StandingsContainer from "./StandingsContainer";
+import RaceResultsSection from "./RaceResultsSection";
+import QualifyingSection from "./QualifyingSection";
+import RaceDetailsSection from "./RaceDetailsSection";
 
-// !! PLEASE REMEMBER TO REFACTOR THIS INTO COMPONENTS
 export const DashboardSections = ({ data, favs, setFavs }) => {
   const [selectedRace, setSelectedRace] = useState(null);
+  const [showStandings, setShowStandings] = useState(false);
+  const [showQualifying, setShowQualifying] = useState(false);
+  const [showRaceResults, setShowRaceResults] = useState(false);
   const [raceResults, setRaceResults] = useState(null);
   const [qualifyingTimes, setQualifyingTimes] = useState(null);
   const [driverModalOpen, setDriverModalOpen] = useState(false);
@@ -129,22 +132,22 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
   const handleShowStandings = async (race) => {
     console.log(race);
     setSelectedRace(race);
+    setShowStandings(true);
+    setShowQualifying(false);
+    setShowRaceResults(false);
 
     try {
-      const { data: driverStandingsData, error: driverStandingsError } =
-        await supabase
-          .from("driverStandings")
-          .select(
-            `
+      const { data: driverStandingsData, error: driverStandingsError } = await supabase
+        .from("driverStandings")
+        .select(`
           drivers (driverRef, code, forename, surname), 
           races (name, round, year, date, raceId), 
           position, 
           points, 
-          wins
-        `
-          )
-          .lte("raceId", race.raceId)
-          .order("position", { ascending: true });
+          wins`
+        )
+        .lte("raceId", race.raceId)
+        .order("position", { ascending: true });
 
       if (driverStandingsError) {
         console.error(
@@ -156,19 +159,14 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
 
       setDriverStandings(driverStandingsData);
 
-      const {
-        data: constructorStandingsData,
-        error: constructorStandingsError,
-      } = await supabase
+      const { data: constructorStandingsData, error: constructorStandingsError } = await supabase
         .from("constructorStandings")
-        .select(
-          `
+        .select(`
           constructors (constructorRef, name, nationality), 
           races (name, round, year, date, raceId), 
           position, 
           points, 
-          wins
-        `
+          wins`
         )
         .lte("raceId", race.raceId)
         .order("position", { ascending: true });
@@ -204,6 +202,9 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
 
   const handleShowQuali = (race) => {
     setSelectedRace(race);
+    setShowQualifying(true);
+    setShowRaceResults(true);
+    setShowStandings(false);
   };
 
   return (
@@ -245,169 +246,40 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
       </section>
       <section className="w-1/16">{/* Blank space */}</section>
       <section className="w-2/3 m-4">
+        <RaceDetailsSection
+          selectedRace={selectedRace}
+          openCircuitModal={openCircuitModal}
+        />
         <div className="flex min-h-screen bg-taupe rounded-md">
-          <div className="w-1/2 m-2">
-            {selectedRace && (
-              <>
-                <div className="p-2">
-                  <h2>
-                    {selectedRace.year}, Round {selectedRace.round},{" "}
-                    {selectedRace.name},{" "}
-                    <a
-                      onClick={() =>
-                        openCircuitModal(selectedRace.circuits.circuitId)
-                      }
-                      className="cursor-pointer"
-                    >
-                      {selectedRace.circuits.name}
-                    </a>
-                    , {selectedRace.date},{" "}
-                    <a
-                      href={selectedRace.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Race Information
-                    </a>
-                  </h2>
-                </div>
+          {(showStandings || showQualifying || showRaceResults) && (
+            <>
+              <div className="w-full flex flex-row">
+                {showQualifying && (
+                  <QualifyingSection
+                    qualifyingTimes={qualifyingTimes}
+                    openDriverModal={openDriverModal}
+                    openConstructorModal={openConstructorModal}
+                  />
+                )}
+                {showRaceResults && (
+                  <RaceResultsSection
+                    raceResults={raceResults}
+                    openDriverModal={openDriverModal}
+                    openConstructorModal={openConstructorModal}
+                  />
+                )}
+              </div>
+              {showStandings && (
                 <StandingsContainer
                   driverStandings={driverStandings}
                   constructorStandings={constructorStandings}
+                  openDriverModal={openDriverModal}
+                  openConstructorModal={openConstructorModal}
                   raceId={selectedRace.raceId}
                 />
-              </>
-            )}
-            <div className="m-2">
-              {qualifyingTimes && (
-                <>
-                  <h2 className="text-center font-bold text-xl py-2">
-                    Qualifying
-                  </h2>
-                  <table className="text-center mx-2">
-                    <thead>
-                      <tr>
-                        <th className="px-2">Pos</th>
-                        <th className="px-2">Driver</th>
-                        <th className="px-2">Constructor</th>
-                        <th>Q1</th>
-                        <th>Q2</th>
-                        <th>Q3</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {qualifyingTimes.map((qualifying, index) => (
-                        <tr
-                          key={`${index}-${qualifying.position}-${qualifying.drivers.driverId}`}
-                        >
-                          <td>{qualifying.position}</td>
-                          <td
-                            key={`${index}-${qualifying.drivers.driverId}-${qualifying.drivers.forename}`}
-                            className={
-                              index < 3
-                                ? "font-bold py-2 hover:underline hover:cursor-pointer"
-                                : "py-2 hover:underline hover:cursor-pointer"
-                            }
-                            onClick={() =>
-                              openDriverModal(qualifying.drivers.driverId)
-                            }
-                          >
-                            {qualifying.drivers.forename}{" "}
-                            {qualifying.drivers.surname}
-                          </td>
-                          <td
-                            key={`${index}-${qualifying.constructors.constructorId}`}
-                            className={
-                              index < 3
-                                ? "font-bold py-2 hover:underline hover:cursor-pointer"
-                                : "py-2 hover:underline hover:cursor-pointer"
-                            }
-                            onClick={() =>
-                              openConstructorModal(
-                                qualifying.constructors.constructorId
-                              )
-                            }
-                          >
-                            {qualifying.constructors.name}
-                          </td>
-                          <td className="px-2">{qualifying.q1}</td>
-                          <td className="px-1">{qualifying.q2}</td>
-                          <td className="px-2">{qualifying.q3}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </>
               )}
-            </div>
-          </div>
-          <div className="w-1/2 m-2">
-            {raceResults && (
-              <>
-                <h2 className="text-center font-bold text-xl py-2">Results</h2>
-                <table className="text-center mx-2">
-                  <thead>
-                    <tr>
-                      <th className="px-2">Pos</th>
-                      <th>Driver</th>
-                      <th className="px-2">Constructor</th>
-                      <th className="px-2">Laps</th>
-                      <th className="px-2">Points</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {raceResults.map((result, index) => (
-                      <tr
-                        key={`${index}-${result.races.round}-${result.races.name}`}
-                        className={
-                          index < 3
-                            ? "bg-wenge text-white my-2 divide-y divide-coyote"
-                            : "divide-y divide-coyote"
-                        }
-                      >
-                        <td
-                          key={`${index}-pos`}
-                          className={index < 3 ? "font-bold" : ""}
-                        >
-                          {result.positionText}
-                        </td>
-                        <td
-                          key={`${index}-${result.drivers.driverId}-${result.drivers.forename}`}
-                          className={
-                            index < 3
-                              ? "font-bold py-3 hover:underline hover:cursor-pointer"
-                              : "py-3 hover:underline hover:cursor-pointer"
-                          }
-                          onClick={() =>
-                            openDriverModal(result.drivers.driverId)
-                          }
-                        >
-                          {result.drivers.forename} {result.drivers.surname}
-                        </td>
-                        <td
-                          key={`${index}-${result.constructors.constructorId}`}
-                          className={
-                            index < 3
-                              ? "font-bold py-3 hover:underline hover:cursor-pointer"
-                              : "py-3 hover:underline hover:cursor-pointer"
-                          }
-                          onClick={() =>
-                            openConstructorModal(
-                              result.constructors.constructorId
-                            )
-                          }
-                        >
-                          {result.constructors.name}
-                        </td>
-                        <td>{result.laps}</td>
-                        <td>{result.points}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </section>
       <DriverModal
