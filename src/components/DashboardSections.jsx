@@ -4,9 +4,13 @@ import StandingsButton from "./StandingsButton";
 import { createClient } from "@supabase/supabase-js";
 import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
+import CircuitModal from "./CircuitModal";
+// import DriverStandings from "./DriverStandings";
+// import ConstructorStandings from "./ConstructorStandings";
+import StandingsContainer from "./StandingsContainer";
 
 // !! PLEASE REMEMBER TO REFACTOR THIS INTO COMPONENTS
-export const DashboardSections = ({ data }) => {
+export const DashboardSections = ({ data, favs, setFavs }) => {
   const [selectedRace, setSelectedRace] = useState(null);
   const [raceResults, setRaceResults] = useState(null);
   const [qualifyingTimes, setQualifyingTimes] = useState(null);
@@ -14,6 +18,10 @@ export const DashboardSections = ({ data }) => {
   const [driverData, setDriverData] = useState(null);
   const [constructorModalOpen, setConstructorModalOpen] = useState(false);
   const [constructorData, setConstructorData] = useState(null);
+  const [circuitModalOpen, setCircuitModalOpen] = useState(false);
+  const [circuitData, setCircuitData] = useState(null);
+  const [driverStandings, setDriverStandings] = useState([]);
+  const [constructorStandings, setConstructorStandings] = useState([]);
 
   const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
   const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -98,6 +106,87 @@ export const DashboardSections = ({ data }) => {
     }
   };
 
+  const openCircuitModal = async (circuitId) => {
+    try {
+      const { data, error } = await supabase
+        .from("circuits")
+        .select("name, url, location, country, lat, lng")
+        .eq("circuitId", circuitId)
+        .single();
+
+      if (error) {
+        throw error;
+      } else {
+        setCircuitData(data);
+        setCircuitModalOpen(true);
+        console.log("Circuit data:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching circuit details:", error.message);
+    }
+  };
+
+  const handleShowStandings = async (race) => {
+    console.log(race);
+    setSelectedRace(race);
+
+    try {
+      const { data: driverStandingsData, error: driverStandingsError } =
+        await supabase
+          .from("driverStandings")
+          .select(
+            `
+          drivers (driverRef, code, forename, surname), 
+          races (name, round, year, date, raceId), 
+          position, 
+          points, 
+          wins
+        `
+          )
+          .lte("raceId", race.raceId)
+          .order("position", { ascending: true });
+
+      if (driverStandingsError) {
+        console.error(
+          "Error fetching driver standings:",
+          driverStandingsError.message
+        );
+        return;
+      }
+
+      setDriverStandings(driverStandingsData);
+
+      const {
+        data: constructorStandingsData,
+        error: constructorStandingsError,
+      } = await supabase
+        .from("constructorStandings")
+        .select(
+          `
+          constructors (constructorRef, name, nationality), 
+          races (name, round, year, date, raceId), 
+          position, 
+          points, 
+          wins
+        `
+        )
+        .lte("raceId", race.raceId)
+        .order("position", { ascending: true });
+
+      if (constructorStandingsError) {
+        console.error(
+          "Error fetching constructor standings:",
+          constructorStandingsError.message
+        );
+        return;
+      }
+
+      setConstructorStandings(constructorStandingsData);
+    } catch (error) {
+      console.error("Error fetching standings:", error.message);
+    }
+  };
+
   const closeDriverModal = () => {
     setDriverData(null);
     setDriverModalOpen(false);
@@ -106,6 +195,11 @@ export const DashboardSections = ({ data }) => {
   const closeConstructorModal = () => {
     setConstructorData(null);
     setConstructorModalOpen(false);
+  };
+
+  const closeCircuitModal = () => {
+    setCircuitData(null);
+    setCircuitModalOpen(false);
   };
 
   const handleShowQuali = (race) => {
@@ -126,14 +220,12 @@ export const DashboardSections = ({ data }) => {
                 key={`${race.id}-${index}`}
                 className="flex items-center justify-between"
               >
-                {/* <div className="flex items-center space-x-4"> */}
                 <div className="flex items-center justify-center mx-4 font-bold">
                   {race.round}
                 </div>
                 <div>
                   <h2>{race.name}</h2>
                 </div>
-                {/* </div> */}
                 <div className="flex mr-2">
                   <ResultsButton
                     race={race}
@@ -142,7 +234,10 @@ export const DashboardSections = ({ data }) => {
                     fetchQualiTimes={fetchQualiTimes}
                   />
 
-                  <StandingsButton />
+                  <StandingsButton
+                    race={race}
+                    onShowStandings={handleShowStandings}
+                  />
                 </div>
               </div>
             ))}
@@ -153,27 +248,35 @@ export const DashboardSections = ({ data }) => {
         <div className="flex min-h-screen bg-taupe rounded-md">
           <div className="w-1/2 m-2">
             {selectedRace && (
-              <div className="p-2">
-                <h2>
-                  {selectedRace.year}, Round {selectedRace.round},{" "}
-                  {selectedRace.name},{" "}
-                  <a
-                    href={selectedRace.circuits.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {selectedRace.circuits.name}
-                  </a>
-                  , {selectedRace.date},{" "}
-                  <a
-                    href={selectedRace.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Race Information
-                  </a>
-                </h2>
-              </div>
+              <>
+                <div className="p-2">
+                  <h2>
+                    {selectedRace.year}, Round {selectedRace.round},{" "}
+                    {selectedRace.name},{" "}
+                    <a
+                      onClick={() =>
+                        openCircuitModal(selectedRace.circuits.circuitId)
+                      }
+                      className="cursor-pointer"
+                    >
+                      {selectedRace.circuits.name}
+                    </a>
+                    , {selectedRace.date},{" "}
+                    <a
+                      href={selectedRace.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Race Information
+                    </a>
+                  </h2>
+                </div>
+                <StandingsContainer
+                  driverStandings={driverStandings}
+                  constructorStandings={constructorStandings}
+                  raceId={selectedRace.raceId}
+                />
+              </>
             )}
             <div className="m-2">
               {qualifyingTimes && (
@@ -311,11 +414,22 @@ export const DashboardSections = ({ data }) => {
         show={driverModalOpen}
         close={closeDriverModal}
         driverData={driverData}
+        favs={favs}
+        setFavs={setFavs}
       />
       <ConstructorModal
         show={constructorModalOpen}
         close={closeConstructorModal}
         constructorData={constructorData}
+        favs={favs}
+        setFavs={setFavs}
+      />
+      <CircuitModal
+        show={circuitModalOpen}
+        close={closeCircuitModal}
+        circuitData={circuitData}
+        favs={favs}
+        setFavs={setFavs}
       />
     </main>
   );

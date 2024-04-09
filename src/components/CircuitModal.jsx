@@ -1,29 +1,28 @@
+import { useState } from "react";
 import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
-// import FavoriteIcon from '@mui/icons-material/Favorite';
-// import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
-const DriverModal = ({ show, close, driverData, favs, setFavs }) => {
+const CircuitModal = ({ show, close, circuitData, favs, setFavs }) => {
   const addToFavs = () => {
     // check if favs has duplicates
     const isDuplicate = favs.some((favourite) => {
-      if (favourite.type === "driver") {
-        return favourite.forename === driverData.forename;
+      if (favourite.type === "circuit") {
+        return favourite.name === circuitData.name;
       }
       return false;
     });
 
     if (isDuplicate) {
-      alert("Driver already added to favorites");
+      alert("Circuit already added to favorites");
       return;
     }
 
     const newFavorite = {
-      forename: driverData.forename,
-      surname: driverData.surname,
-      dob: driverData.dob,
-      nationality: driverData.nationality,
-      type: "driver",
+      name: circuitData.name,
+      nationality: circuitData.nationality,
+      url: circuitData.url,
+      type: "circuit",
     };
 
     const updatedFavs = [...favs, newFavorite];
@@ -32,32 +31,32 @@ const DriverModal = ({ show, close, driverData, favs, setFavs }) => {
 
   return (
     <Modal dismissible show={show} onClose={close}>
-      {driverData && (
+      {circuitData && (
         <div className="flex bg-taupe rounded-md">
           <div className="w-2/3">
             <Modal.Body>
               <div>
                 <Typography variant="h2" component="h2">
-                  {driverData.forename} {driverData.surname}
-                </Typography>
-
-                <Typography variant="h6" component="p">
-                  Date of birth: {driverData.dob}
+                  {circuitData.name}
                 </Typography>
 
                 <Typography variant="p" component="p">
-                  Nationality: {driverData.nationality}
+                  Country: {circuitData.country}
                 </Typography>
 
                 <Typography variant="p" component="p">
-                  <a href={driverData.url} target="_blank" rel="noreferrer">
+                  Location: {circuitData.location}
+                </Typography>
+
+                <Typography variant="p" component="p">
+                  <a href={circuitData.url} target="_blank" rel="noreferrer">
                     Wikipedia
                   </a>
                 </Typography>
 
                 <img
                   src={`https://placehold.co/300x200`}
-                  alt="Driver"
+                  alt="Constructor"
                   className="my-2"
                 />
               </div>
@@ -84,4 +83,4 @@ const DriverModal = ({ show, close, driverData, favs, setFavs }) => {
   );
 };
 
-export default DriverModal;
+export default CircuitModal;

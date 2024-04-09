@@ -16,7 +16,7 @@ export const AboutModalButton = () => {
 
   return (
     <>
-      <Button color="inherit" onClick={handleAboutOpen} sx={{mx: 1}}>
+      <Button color="inherit" onClick={handleAboutOpen} sx={{ mx: 1 }}>
         About
       </Button>
       <Modal open={aboutOpen} onClose={handleAboutClose}>
@@ -37,14 +37,15 @@ export const AboutModalButton = () => {
             About
           </Typography>
           <Typography variant="body1" gutterBottom sx={{ mt: 2 }}>
-            A project to display Formula 1 data. Users can select a specific race to see the qualifying times
-            and results for that race. Users can also add drivers, constructors and circuits to their favorites.
+            A project to display Formula 1 data. Users can select a specific
+            race to see the qualifying times and results for that race. Users
+            can also add drivers, constructors and circuits to their favorites.
           </Typography>
           <Typography variant="body1" gutterBottom sx={{ mt: 2 }}>
             Built with React, Material UI, Tailwind CSS, and Supabase
           </Typography>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            By: Mārtiņš Greizis
+            By: Mārtiņš Greizis, Hoomer Amid
           </Typography>
           <Button
             variant="outlined"

@@ -6,6 +6,7 @@ import { DashboardSections } from "@/components/DashboardSections";
 export const Dashboard = () => {
   const [data, setData] = useState(null);
   const [selectedYear, setSelectedYear] = useState(2023);
+  const [favs, setFavs] = useState([]);
 
   useEffect(() => {
     const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
@@ -17,7 +18,7 @@ export const Dashboard = () => {
       const fetchRaceData = async () => {
         const { data, error } = await supabase
           .from("races")
-          .select(`raceId, year, circuits (name, url), date, round, url, name`)
+          .select(`raceId, year, circuits (name, url, circuitId), date, round, url, name`)
           .eq("year", selectedYear)
           .order("date", { ascending: true });
 
@@ -38,9 +39,9 @@ export const Dashboard = () => {
 
   return (
     <>
-      <Header onYearChange={handleYearChange} />
+      <Header onYearChange={handleYearChange} favs={favs} setFavs={setFavs} />
 
-      <DashboardSections data={data} />
+      <DashboardSections data={data} favs={favs} setFavs={setFavs} />
     </>
   );
 };
