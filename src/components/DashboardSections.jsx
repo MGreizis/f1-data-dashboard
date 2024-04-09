@@ -5,6 +5,9 @@ import { createClient } from "@supabase/supabase-js";
 import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
 import CircuitModal from "./CircuitModal";
+// import DriverStandings from "./DriverStandings";
+// import ConstructorStandings from "./ConstructorStandings";
+import StandingsContainer from "./StandingsContainer";
 
 // !! PLEASE REMEMBER TO REFACTOR THIS INTO COMPONENTS
 export const DashboardSections = ({ data }) => {
@@ -17,6 +20,8 @@ export const DashboardSections = ({ data }) => {
   const [constructorData, setConstructorData] = useState(null);
   const [circuitModalOpen, setCircuitModalOpen] = useState(false);
   const [circuitData, setCircuitData] = useState(null);
+  const [driverStandings, setDriverStandings] = useState([]);
+  const [constructorStandings, setConstructorStandings] = useState([]);
 
   const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
   const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -121,6 +126,52 @@ export const DashboardSections = ({ data }) => {
     }
   }
 
+  const handleShowStandings = async (race) => {
+    setSelectedRace(race);
+
+    try {
+      const { data: driverStandingsData, error: driverStandingsError } = await supabase
+        .from("driverStandings")
+        .select(`
+          drivers (driverRef, code, forename, surname), 
+          races (name, round, year, date, raceId), 
+          position, 
+          points, 
+          wins
+        `)
+        .lte("raceId", race.raceId)
+        .order('position', { ascending: true });
+
+      if (driverStandingsError) {
+        console.error("Error fetching driver standings:", driverStandingsError.message);
+        return;
+      }
+
+      setDriverStandings(driverStandingsData);
+
+      const { data: constructorStandingsData, error: constructorStandingsError } = await supabase
+        .from("constructorStandings")
+        .select(`
+          constructors (constructorRef, name, nationality), 
+          races (name, round, year, date, raceId), 
+          position, 
+          points, 
+          wins
+        `)
+        .lte("raceId", race.raceId)
+        .order('position', { ascending: true });
+
+      if (constructorStandingsError) {
+        console.error("Error fetching constructor standings:", constructorStandingsError.message);
+        return;
+      }
+
+      setConstructorStandings(constructorStandingsData);
+    } catch (error) {
+      console.error("Error fetching standings:", error.message);
+    }
+  }
+
   const closeDriverModal = () => {
     setDriverData(null);
     setDriverModalOpen(false);
@@ -168,7 +219,10 @@ export const DashboardSections = ({ data }) => {
                     fetchQualiTimes={fetchQualiTimes}
                   />
 
-                  <StandingsButton />
+                  <StandingsButton 
+                    race={selectedRace}
+                    onShowStandings={handleShowStandings}
+                  />
                 </div>
               </div>
             ))}
@@ -179,6 +233,7 @@ export const DashboardSections = ({ data }) => {
         <div className="flex min-h-screen bg-taupe rounded-md">
           <div className="w-1/2 m-2">
             {selectedRace && (
+              <>
               <div className="p-2">
                 <h2>
                   {selectedRace.year}, Round {selectedRace.round},{" "}
@@ -199,6 +254,8 @@ export const DashboardSections = ({ data }) => {
                   </a>
                 </h2>
               </div>
+              <StandingsContainer driverStandings={driverStandings} constructorStandings={constructorStandings} raceId={selectedRace} />
+</>
             )}
             <div className="m-2">
               {qualifyingTimes && (
