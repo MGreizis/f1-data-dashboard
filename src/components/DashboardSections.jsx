@@ -79,7 +79,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
       } else {
         setDriverData(data);
         setDriverModalOpen(true);
-        console.log("Driver data:", data);
       }
     } catch (error) {
       console.error("Error fetching driver details:", error.message);
@@ -99,7 +98,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
       } else {
         setConstructorData(data);
         setConstructorModalOpen(true);
-        console.log("Driver data:", data);
       }
     } catch (error) {
       console.error("Error fetching constructor details:", error.message);
@@ -120,7 +118,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
         setCircuitData(data);
         setCircuitModalOpen(true);
         setModalSize("4xl");
-        console.log("Circuit data:", data);
       }
     } catch (error) {
       console.error("Error fetching circuit details:", error.message);
@@ -128,7 +125,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
   };
 
   const handleShowStandings = async (race) => {
-    console.log(race);
     setSelectedRace(race);
     setShowStandings(true);
     setShowQualifying(false);

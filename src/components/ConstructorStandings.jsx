@@ -30,7 +30,6 @@ const ConstructorStandings = ({ raceId, openConstructorModal }) => {
         }
 
         setStandings(data);
-        console.log(data)
       } catch (err) {
         console.error("Error fetching constructor standings:", err.message);
       }
