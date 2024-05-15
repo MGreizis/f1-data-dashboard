@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ResultsButton from "./ResultsButton";
 import StandingsButton from "./StandingsButton";
-import { createClient } from "@supabase/supabase-js";
 import DriverModal from "./DriverModal";
 import ConstructorModal from "./ConstructorModal";
 import CircuitModal from "./CircuitModal";
@@ -9,6 +8,7 @@ import StandingsContainer from "./StandingsContainer";
 import RaceResultsSection from "./RaceResultsSection";
 import QualifyingSection from "./QualifyingSection";
 import RaceDetailsSection from "./RaceDetailsSection";
+import supabase from "../api/supabase";
 
 export const DashboardSections = ({ data, favs, setFavs }) => {
   const [selectedRace, setSelectedRace] = useState(null);
@@ -26,10 +26,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
   const [modalSize, setModalSize] = useState("md");
   const [driverStandings, setDriverStandings] = useState([]);
   const [constructorStandings, setConstructorStandings] = useState([]);
-
-  const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-  const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   const fetchRaceResults = async (raceId) => {
     try {

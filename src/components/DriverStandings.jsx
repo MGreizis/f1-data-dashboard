@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../api/supabase";
 
 const DriverStandings = ({ raceId, openDriverModal }) => {
   const [standings, setStandings] = useState([]);
 
   useEffect(() => {
     const fetchDriverStandings = async () => {
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-      const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
       try {
         const { data, error } = await supabase
           .from("driverStandings")

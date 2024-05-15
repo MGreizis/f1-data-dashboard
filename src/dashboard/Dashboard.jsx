@@ -1,7 +1,7 @@
 import Header from "../common/Header";
-import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { DashboardSections } from "@/components/DashboardSections";
+import supabase from "../api/supabase";
 
 export const Dashboard = () => {
   const [data, setData] = useState(null);
@@ -9,28 +9,21 @@ export const Dashboard = () => {
   const [favs, setFavs] = useState([]);
 
   useEffect(() => {
-    const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-    const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+    const fetchRaceData = async () => {
+      const { data, error } = await supabase
+        .from("races")
+        .select(`raceId, year, circuits (name, url, circuitId), date, round, url, name`)
+        .eq("year", selectedYear)
+        .order("date", { ascending: true });
 
-    if (supabaseUrl && supabaseAnonKey) {
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      if (error) {
+        console.error("Error fetching data:", error.message);
+      } else {
+        setData(data);
+      }
+    };
 
-      const fetchRaceData = async () => {
-        const { data, error } = await supabase
-          .from("races")
-          .select(`raceId, year, circuits (name, url, circuitId), date, round, url, name`)
-          .eq("year", selectedYear)
-          .order("date", { ascending: true });
-
-        if (error) {
-          console.error("Error fetching data:", error.message);
-        } else {
-          setData(data);
-        }
-      };
-
-      fetchRaceData();
-    }
+    fetchRaceData();
   }, [selectedYear]);
 
   const handleYearChange = (year) => {
