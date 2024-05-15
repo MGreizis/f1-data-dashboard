@@ -1,8 +1,9 @@
 import { Modal } from "flowbite-react";
 import { Typography } from "@mui/material";
-// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
-const CircuitModal = ({ show, close, circuitData, favs, setFavs }) => {
+const CircuitModal = ({ show, close, circuitData, favs, setFavs, modalSize }) => {
+
   const addToFavs = () => {
     // check if favs has duplicates
     const isDuplicate = favs.some((favourite) => {
@@ -29,10 +30,10 @@ const CircuitModal = ({ show, close, circuitData, favs, setFavs }) => {
   };
 
   return (
-    <Modal dismissible show={show} onClose={close}>
+    <Modal dismissible show={show} onClose={close} size={modalSize}>
       {circuitData && (
         <div className="flex bg-taupe rounded-md">
-          <div className="w-2/3">
+          <div className="w-1/2">
             <Modal.Body>
               <div>
                 <Typography variant="h2" component="h2">
@@ -62,19 +63,36 @@ const CircuitModal = ({ show, close, circuitData, favs, setFavs }) => {
             </Modal.Body>
           </div>
 
-          <div className="w-1/3 p-4">
-            <button
-              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
-              onClick={close}
-            >
-              Close
-            </button>
-            <button
-              className="my-2 py-2 px-8 min-w-full bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
-              onClick={addToFavs}
-            >
-              Add to Favorites
-            </button>
+          <div className="w-1/2 p-4">
+            <div className="flex justify-end">
+              <button
+                className="my-2 py-2 px-8 min-w-4 max-h-fit bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
+                onClick={close}
+              >
+                Close
+              </button>
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="my-2 py-2 px-8 min-w-4 max-h-fit bg-slate-200 hover:bg-coyote text-eggplant font-bold rounded"
+                onClick={addToFavs}
+              >
+                Add to Favorites
+              </button>
+            </div>
+            <div id="map">
+              <MapContainer center={[circuitData.lat, circuitData.lng]} zoom={14} scrollWheelZoom={false}>
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[circuitData.lat, circuitData.lng]}>
+                  <Popup>
+                    {circuitData.location}
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
           </div>
         </div>
       )}

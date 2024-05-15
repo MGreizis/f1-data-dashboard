@@ -11,4 +11,13 @@
   a {
     @apply underline;
   }
+
+}
+
+#map {
+  height: 400px;
+}
+
+.leaflet-container {
+  height: 400px;
 }

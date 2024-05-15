@@ -23,6 +23,7 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
   const [constructorData, setConstructorData] = useState(null);
   const [circuitModalOpen, setCircuitModalOpen] = useState(false);
   const [circuitData, setCircuitData] = useState(null);
+  const [modalSize, setModalSize] = useState("md");
   const [driverStandings, setDriverStandings] = useState([]);
   const [constructorStandings, setConstructorStandings] = useState([]);
 
@@ -122,6 +123,7 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
       } else {
         setCircuitData(data);
         setCircuitModalOpen(true);
+        setModalSize("4xl");
         console.log("Circuit data:", data);
       }
     } catch (error) {
@@ -302,6 +304,7 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
         circuitData={circuitData}
         favs={favs}
         setFavs={setFavs}
+        modalSize={modalSize}
       />
     </main>
   );
