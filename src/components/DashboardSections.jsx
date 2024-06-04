@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ResultsButton from "./ResultsButton";
 import StandingsButton from "./StandingsButton";
 import DriverModal from "./DriverModal";
@@ -123,6 +123,14 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
       console.error("Error fetching circuit details:", error.message);
     }
   };
+
+  // call fetchRaceResults every 4 days to prevent the db from shutting down
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchRaceResults(selectedRace?.raceId);
+    }, 4 * 24 * 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [selectedRace]);
 
   const handleShowStandings = async (race) => {
     setSelectedRace(race);
