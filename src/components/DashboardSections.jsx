@@ -40,7 +40,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
         console.error("Error fetching race results:", error.message);
       } else {
         setRaceResults(data);
-        console.log(raceId);
       }
     } catch (error) {
       console.error("Error fetching race results:", error.message);
@@ -187,7 +186,7 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
     };
 
     callFetchRaceResults();
-    
+
     const intervalId = setInterval(() => {
       callFetchRaceResults();
     }, 4 * 24 * 60 * 60 * 1000); // 4 days in milliseconds
