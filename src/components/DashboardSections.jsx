@@ -40,6 +40,7 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
         console.error("Error fetching race results:", error.message);
       } else {
         setRaceResults(data);
+        console.log(raceId);
       }
     } catch (error) {
       console.error("Error fetching race results:", error.message);
@@ -124,14 +125,6 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
     }
   };
 
-  // call fetchRaceResults every 4 days to prevent the db from shutting down
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchRaceResults(selectedRace?.raceId);
-    }, 4 * 24 * 60 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [selectedRace]);
-
   const handleShowStandings = async (race) => {
     setSelectedRace(race);
     setShowStandings(true);
@@ -187,6 +180,21 @@ export const DashboardSections = ({ data, favs, setFavs }) => {
     }
   };
 
+  useEffect(() => {
+    const raceId = 1100;
+    const callFetchRaceResults = async () => {
+      await fetchRaceResults(raceId);
+    };
+
+    callFetchRaceResults();
+    
+    const intervalId = setInterval(() => {
+      callFetchRaceResults();
+    }, 4 * 24 * 60 * 60 * 1000); // 4 days in milliseconds
+
+    return () => clearInterval(intervalId);
+  }, []);
+  
   const closeDriverModal = () => {
     setDriverData(null);
     setDriverModalOpen(false);
